@@ -24,7 +24,7 @@ export default function TopBar() {
   return (
     <div className="bg-primary text-white p-4 flex items-center justify-between sticky top-0 z-40 shadow-md">
       <div className="flex items-center space-x-2">
-        <h1 className="text-xl font-bold tracking-wide">Workcrew</h1>
+        <h1 className="text-xl font-bold tracking-wide">누리종합환경</h1>
         {mode === 'worker' && workerName && (
           <span className="bg-white/20 text-xs px-2 py-1 rounded-full flex items-center">
             <User size={12} className="mr-1" />
