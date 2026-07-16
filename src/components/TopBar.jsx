@@ -22,30 +22,32 @@ export default function TopBar() {
   };
 
   return (
-    <div className="bg-primary text-white p-4 flex items-center justify-between sticky top-0 z-40 shadow-md">
-      <div className="flex items-center space-x-2">
-        <h1 className="text-xl font-bold tracking-wide">누리종합환경</h1>
+    <div className="bg-white/80 backdrop-blur-md text-slate-900 p-4 flex items-center justify-between sticky top-0 z-40 border-b border-slate-200">
+      <div className="flex items-center space-x-3">
+        <h1 className="text-xl font-bold tracking-tight text-slate-900">누리종합환경</h1>
         {mode === 'worker' && workerName && (
-          <span className="bg-white/20 text-xs px-2 py-1 rounded-full flex items-center">
+          <span className="bg-slate-100 text-slate-600 text-xs px-2.5 py-1 rounded-full flex items-center border border-slate-200 font-medium">
             <User size={12} className="mr-1" />
             {workerName}
           </span>
         )}
       </div>
       
-      <div className="flex items-center space-x-3">
+      <div className="flex items-center space-x-2">
         <button 
           onClick={handleShare}
-          className="flex items-center space-x-1 bg-white/10 hover:bg-white/20 px-3 py-1.5 rounded-lg transition-colors"
+          className="flex items-center space-x-1 bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 px-3 py-1.5 rounded-lg transition-colors shadow-sm"
         >
-          {copied ? <Check size={16} className="text-accent-green" /> : <Share2 size={16} />}
+          {copied ? <Check size={16} className="text-blue-500" /> : <Share2 size={16} />}
           <span className="text-sm font-medium">{copied ? '복사됨' : '공유'}</span>
         </button>
 
         <button 
           onClick={toggleMode}
-          className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg font-medium transition-colors ${
-            mode === 'admin' ? 'bg-accent-orange text-white' : 'bg-white/10 hover:bg-white/20'
+          className={`flex items-center space-x-1 px-3 py-1.5 rounded-lg font-medium transition-colors shadow-sm border ${
+            mode === 'admin' 
+              ? 'bg-slate-900 border-slate-900 text-white hover:bg-slate-800' 
+              : 'bg-white border-slate-200 text-slate-700 hover:bg-slate-50'
           }`}
         >
           <UserCog size={16} />
