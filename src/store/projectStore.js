@@ -55,6 +55,8 @@ export const useProjectStore = create((set, get) => ({
   mode: localStorage.getItem('workcrew-mode') || 'admin',
   workerName: localStorage.getItem('workcrew-worker') || null,
   isInitialized: false,
+  lastUpdateTime: 0,
+  fetchTimer: null,
 
   setMode: (mode) => {
     localStorage.setItem('workcrew-mode', mode);
@@ -111,9 +113,16 @@ export const useProjectStore = create((set, get) => ({
     set({ isInitialized: true });
 
     supabase.channel('public:any_changes')
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'project_info' }, () => get().fetchFromDB())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'days' }, () => get().fetchFromDB())
-      .on('postgres_changes', { event: '*', schema: 'public', table: 'tasks' }, () => get().fetchFromDB())
+      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+        // 내가 타이핑 중일 때(최근 2초 이내 업데이트 발생) DB에서 다시 불러오면 한글 타이핑이 끊기는 현상 방지
+        const timeSinceLastUpdate = Date.now() - get().lastUpdateTime;
+        if (timeSinceLastUpdate > 2000) {
+          get().fetchFromDB();
+        } else {
+          clearTimeout(get().fetchTimer);
+          set({ fetchTimer: setTimeout(() => get().fetchFromDB(), 2000) });
+        }
+      })
       .subscribe();
   },
 
@@ -156,7 +165,7 @@ export const useProjectStore = create((set, get) => ({
   },
 
   updateProjectInfo: async (info) => {
-    set((state) => ({ data: { ...state.data, ...info } }));
+    set((state) => ({ data: { ...state.data, ...info }, lastUpdateTime: Date.now() }));
     
     const dbPayload = {};
     if (info.projectName !== undefined) dbPayload.project_name = info.projectName;
@@ -180,7 +189,7 @@ export const useProjectStore = create((set, get) => ({
       tasks: []
     };
     
-    set((state) => ({ data: { ...state.data, days: [...state.data.days, newDay] } }));
+    set((state) => ({ data: { ...state.data, days: [...state.data.days, newDay] }, lastUpdateTime: Date.now() }));
     
     await supabase.from('days').insert({
       id: newDay.id,
@@ -191,7 +200,7 @@ export const useProjectStore = create((set, get) => ({
   },
 
   removeDay: async (dayId) => {
-    set((state) => ({ data: { ...state.data, days: state.data.days.filter(day => day.id !== dayId) } }));
+    set((state) => ({ data: { ...state.data, days: state.data.days.filter(day => day.id !== dayId) }, lastUpdateTime: Date.now() }));
     await supabase.from('days').delete().eq('id', dayId);
   },
 
@@ -213,7 +222,7 @@ export const useProjectStore = create((set, get) => ({
     const newDays = state.data.days.map(d => 
       d.id === dayId ? { ...d, tasks: [...d.tasks, newTask] } : d
     );
-    set({ data: { ...state.data, days: newDays } });
+    set({ data: { ...state.data, days: newDays }, lastUpdateTime: Date.now() });
     
     await supabase.from('tasks').insert({
       id: newTask.id,
@@ -241,7 +250,7 @@ export const useProjectStore = create((set, get) => ({
         }
         return day;
       });
-      return { data: { ...state.data, days: newDays } };
+      return { data: { ...state.data, days: newDays }, lastUpdateTime: Date.now() };
     });
 
     const dbPayload = {};
@@ -268,7 +277,7 @@ export const useProjectStore = create((set, get) => ({
         }
         return day;
       });
-      return { data: { ...state.data, days: newDays } };
+      return { data: { ...state.data, days: newDays }, lastUpdateTime: Date.now() };
     });
     
     await supabase.from('tasks').delete().eq('id', taskId);
