@@ -191,8 +191,27 @@ export default function DayModule({ activeDayId }) {
                 </div>
                 
                 {task.memo && (
-                  <div className="bg-amber-50/50 border border-amber-100 rounded-xl p-4 mb-3 max-h-40 overflow-y-auto text-sm text-slate-700 whitespace-pre-wrap leading-relaxed shadow-sm">
-                    {task.memo}
+                  <div className="space-y-2 mb-3 max-h-40 overflow-y-auto pr-1">
+                    {task.memo.split('\n').filter(Boolean).map((line, lineIndex) => (
+                      <div key={lineIndex} className="flex justify-between items-start bg-amber-50/50 border border-amber-100 rounded-xl p-3 shadow-sm">
+                        <div className="text-sm text-slate-700 whitespace-pre-wrap leading-relaxed flex-1">
+                          {line}
+                        </div>
+                        <button
+                          onClick={() => {
+                            if (window.confirm('이 메모를 삭제하시겠습니까?')) {
+                              const lines = task.memo.split('\n').filter(Boolean);
+                              lines.splice(lineIndex, 1);
+                              updateTask(day.id, task.id, { memo: lines.join('\n') });
+                            }
+                          }}
+                          className="text-slate-400 hover:text-red-500 hover:bg-red-50 p-1.5 rounded-lg transition-colors ml-2 flex-shrink-0"
+                          title="메모 삭제"
+                        >
+                          <Trash2 size={14} />
+                        </button>
+                      </div>
+                    ))}
                   </div>
                 )}
                 

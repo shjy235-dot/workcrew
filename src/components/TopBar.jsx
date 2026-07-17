@@ -18,7 +18,16 @@ export default function TopBar() {
   };
 
   const toggleMode = () => {
-    setMode(mode === 'admin' ? 'worker' : 'admin');
+    if (mode === 'worker') {
+      const pin = window.prompt('관리자 비밀번호를 입력해주세요:');
+      if (pin === '9445') {
+        setMode('admin');
+      } else if (pin !== null) {
+        alert('비밀번호가 일치하지 않습니다.');
+      }
+    } else {
+      setMode('worker');
+    }
   };
 
   return (

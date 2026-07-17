@@ -22,14 +22,14 @@ export default function WorkerAuthModal() {
         <form onSubmit={handleSubmit} className="p-6">
           <div className="mb-4">
             <label className="block text-sm font-medium text-gray-700 mb-1">
-              이름 또는 직급 (예: 김팀장, 이프로)
+              이름
             </label>
             <input
               type="text"
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-accent-blue text-lg"
-              placeholder="여기에 입력하세요"
+              placeholder="이름을 입력하세요"
               required
               autoFocus
             />

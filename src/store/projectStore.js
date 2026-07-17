@@ -52,7 +52,7 @@ const initialMockData = {
 
 export const useProjectStore = create((set, get) => ({
   data: { projectName: "", startDate: "", endDate: "", notice: "", totalVolume: "", days: [] },
-  mode: localStorage.getItem('workcrew-mode') || 'admin',
+  mode: localStorage.getItem('workcrew-mode') || 'worker',
   workerName: localStorage.getItem('workcrew-worker') || null,
   isInitialized: false,
   lastUpdateTime: 0,
