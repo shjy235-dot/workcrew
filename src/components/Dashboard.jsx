@@ -109,7 +109,7 @@ export default function Dashboard() {
         <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
           <div className="flex items-center text-amber-900 mb-2">
             <FileText size={18} className="mr-2 text-amber-600" />
-            <span className="font-bold">현장 공지 / 안전사항</span>
+            <span className="font-bold">공지사항</span>
           </div>
           {mode === 'admin' ? (
             <textarea
