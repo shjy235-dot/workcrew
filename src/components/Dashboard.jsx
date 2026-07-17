@@ -31,7 +31,7 @@ export default function Dashboard() {
               type="text"
               value={data.projectName}
               onChange={(e) => updateProjectInfo({ projectName: e.target.value })}
-              className="w-full text-[25px] font-bold text-slate-900 border-b-2 border-transparent hover:border-slate-200 focus:border-blue-500 focus:outline-none pb-2 bg-transparent transition-colors min-h-[44px]"
+              className="w-full text-[25px] font-bold text-slate-900 border-b-2 border-transparent hover:border-slate-200 focus:border-slate-900 focus:outline-none pb-2 bg-transparent transition-colors min-h-[44px]"
               placeholder="프로젝트명을 입력하세요"
             />
         ) : (
@@ -52,7 +52,7 @@ export default function Dashboard() {
               value={data.startDate || ''}
               onChange={(e) => updateProjectInfo({ startDate: e.target.value })}
               disabled={mode === 'worker'}
-              className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow disabled:bg-slate-100 disabled:text-slate-400"
+              className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-100 disabled:text-slate-400"
             />
             <span className="text-slate-300 font-bold">-</span>
             <input
@@ -60,7 +60,7 @@ export default function Dashboard() {
               value={data.endDate || ''}
               onChange={(e) => updateProjectInfo({ endDate: e.target.value })}
               disabled={mode === 'worker'}
-              className="flex-1 bg-slate-50 border border-slate-200 rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow disabled:bg-slate-100 disabled:text-slate-400"
+              className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-100 disabled:text-slate-400"
             />
           </div>
           {(!data.startDate || !data.endDate) && (
@@ -82,7 +82,7 @@ export default function Dashboard() {
               rows={3}
               value={data.totalVolume || ''}
               onChange={(e) => updateProjectInfo({ totalVolume: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[96px]"
+              className="w-full bg-slate-50 border border-slate-200 input-mac text-slate-800 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[96px]"
               placeholder="예: 천장형 1way 650대, 벽걸이 110대 (총 761대)"
             />
           ) : (
@@ -115,7 +115,7 @@ export default function Dashboard() {
             <textarea
               value={data.notice || ''}
               onChange={(e) => updateProjectInfo({ notice: e.target.value })}
-              className="w-full bg-white/60 border border-amber-200 text-amber-900 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-amber-500 focus:border-transparent transition-shadow min-h-[96px]"
+              className="w-full bg-white/60 border border-amber-200 input-mac text-amber-900 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-shadow min-h-[96px]"
               placeholder="작업 전 주의사항을 입력하세요"
             />
           ) : (

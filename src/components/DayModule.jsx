@@ -36,7 +36,7 @@ export default function DayModule({ activeDayId }) {
           {mode === 'admin' && (
             <button 
               onClick={() => addTask(day.id)}
-              className="bg-slate-900 text-white px-6 py-3 rounded-xl text-[13px] font-medium flex items-center justify-center mx-auto hover:bg-slate-800 transition-colors shadow-sm min-h-[44px]"
+              className="bg-slate-900 text-white px-6 py-3 rounded-xl text-[13px] font-medium flex items-center justify-center mx-auto hover:bg-slate-800 transition-colors shadow-sm btn-mac min-h-[44px]"
             >
               <Plus size={18} className="mr-2" />
               첫 작업 추가하기
@@ -74,7 +74,7 @@ export default function DayModule({ activeDayId }) {
                       value={task.scope}
                       onChange={(e) => updateTask(day.id, task.id, { scope: e.target.value })}
                       placeholder="예: A동 1층 로비"
-                      className="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[13px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all min-h-[44px]"
+                      className="w-full bg-slate-50 border border-slate-200 input-mac rounded-xl px-4 py-3 text-[13px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all min-h-[44px]"
                     />
                   ) : (
                     <div className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 min-h-[44px] flex items-center">
@@ -93,7 +93,7 @@ export default function DayModule({ activeDayId }) {
                       <select 
                         value={task.acType || ''}
                         onChange={(e) => updateTask(day.id, task.id, { acType: e.target.value })}
-                        className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-slate-900 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-all appearance-none"
+                        className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl px-4 py-3 text-slate-900 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all appearance-none"
                       >
                         <option value="벽걸이">벽걸이</option>
                         <option value="천장형 1way(EHP)">천장형 1way(EHP)</option>
@@ -102,7 +102,7 @@ export default function DayModule({ activeDayId }) {
                         <option value="천장형 4way(FCU)">천장형 4way(FCU)</option>
                         <option value="스탠드">스탠드</option>
                       </select>
-                      <div className="flex items-center w-24 bg-slate-50 border border-slate-200 rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-blue-500 transition-all min-h-[44px]">
+                      <div className="flex items-center w-24 bg-slate-50 border border-slate-200 input-mac rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-slate-900 transition-all min-h-[44px]">
                         <input 
                           type="number"
                           value={task.acCount || ''}
@@ -222,11 +222,11 @@ export default function DayModule({ activeDayId }) {
                     onChange={(e) => setMemoInput({ ...memoInput, [task.id]: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleMemoSubmit(task.id)}
                     placeholder="현장 특이사항을 입력하세요..."
-                    className="flex-1 bg-slate-50 border border-slate-200 rounded-xl px-4 py-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition-shadow min-h-[44px]"
+                    className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl px-4 py-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[44px]"
                   />
                   <button
                     onClick={() => handleMemoSubmit(task.id)}
-                    className="bg-slate-800 text-white px-5 py-3 rounded-xl text-[13px] font-medium hover:bg-slate-900 transition-colors shadow-sm whitespace-nowrap min-h-[44px] flex items-center justify-center"
+                    className="bg-slate-800 text-white px-5 py-3 rounded-xl text-[13px] font-medium hover:bg-slate-900 transition-colors shadow-sm btn-mac whitespace-nowrap min-h-[44px] flex items-center justify-center"
                   >
                     등록
                   </button>
