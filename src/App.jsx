@@ -29,8 +29,8 @@ function App() {
   }, [data.days, activeDayId]);
 
   return (
-    <div className="min-h-screen bg-slate-100 blueprint-grid flex justify-center">
-      <div className="w-full max-w-md bg-white shadow-xl min-h-screen relative overflow-x-hidden flex flex-col">
+    <div className="min-h-screen flex justify-center" style={{ backgroundColor: '#07080a' }}>
+      <div className="w-full max-w-md min-h-screen relative overflow-x-hidden flex flex-col" style={{ backgroundColor: '#07080a', borderLeft: '1px solid rgba(255,255,255,0.06)', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
         {mode === 'worker' && !workerName && <WorkerAuthModal />}
         
         <TopBar />

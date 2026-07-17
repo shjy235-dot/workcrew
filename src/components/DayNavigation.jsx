@@ -2,6 +2,18 @@ import React, { useRef } from 'react';
 import { Plus, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProjectStore } from '../store/projectStore';
 
+const rc = {
+  bg: '#07080a',
+  surface: '#101111',
+  card: '#1b1c1e',
+  border: 'rgba(255, 255, 255, 0.06)',
+  borderSolid: '#252829',
+  textMain: '#f9f9f9',
+  textSec: '#9c9c9d',
+  blue: '#55b3ff',
+  red: '#FF6363',
+};
+
 export default function DayNavigation({ activeDayId, setActiveDayId }) {
   const { data, mode, addDay, removeDay } = useProjectStore();
   const scrollRef = useRef(null);
@@ -11,7 +23,7 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
       const scrollAmount = 150;
       scrollRef.current.scrollBy({
         left: direction === 'left' ? -scrollAmount : scrollAmount,
-        behavior: 'smooth'
+        behavior: 'smooth',
       });
     }
   };
@@ -26,7 +38,7 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
     if (window.confirm('정말 이 일정을 삭제하시겠습니까? 내부의 모든 작업 내역이 사라집니다.')) {
       removeDay(dayId);
       if (activeDayId === dayId && data.days.length > 1) {
-        const remaining = data.days.filter(d => d.id !== dayId);
+        const remaining = data.days.filter((d) => d.id !== dayId);
         setActiveDayId(remaining[0].id);
       }
     }
@@ -42,44 +54,84 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
   };
 
   return (
-    <div className="bg-slate-50 border-b border-slate-200 sticky top-[68px] z-30 shadow-sm">
+    <div
+      className="sticky z-30"
+      style={{
+        top: '68px',
+        backgroundColor: rc.bg,
+        borderBottom: `1px solid ${rc.border}`,
+      }}
+    >
       <div className="flex items-center px-2 py-2">
-        <button onClick={() => scroll('left')} className="p-2 text-slate-400 hover:text-slate-800 transition-colors">
+        <button
+          onClick={() => scroll('left')}
+          className="p-2 rounded-lg transition-colors"
+          style={{ color: rc.textSec }}
+          onMouseEnter={e => (e.currentTarget.style.color = rc.textMain)}
+          onMouseLeave={e => (e.currentTarget.style.color = rc.textSec)}
+        >
           <ChevronLeft size={20} />
         </button>
-        
-        <div 
-          ref={scrollRef}
-          className="flex-1 flex overflow-x-auto hide-scrollbar space-x-2 snap-x px-1"
-        >
-          {data.days.map((day, index) => (
-            <div 
-              key={day.id}
-              onClick={() => setActiveDayId(day.id)}
-              className={`flex-shrink-0 snap-start flex items-center px-4 py-2 rounded-xl cursor-pointer transition-all duration-200 border shadow-sm ${
-                activeDayId === day.id 
-                  ? 'bg-slate-800 text-white border-slate-800 ring-1 ring-slate-800' 
-                  : 'bg-white text-slate-600 border-slate-200 hover:bg-slate-100 hover:text-slate-800'
-              }`}
-            >
-              <span className="font-medium whitespace-nowrap text-[15px]">{getDayLabel(day, index)}</span>
-              {mode === 'admin' && (
-                <button 
-                  onClick={(e) => handleRemoveDay(day.id, e)}
-                  className={`ml-2 p-1 rounded-md transition-colors ${
-                    activeDayId === day.id ? 'hover:bg-slate-700 text-slate-300 hover:text-white' : 'hover:bg-slate-200 text-slate-400 hover:text-red-500'
-                  }`}
-                >
-                  <Trash2 size={16} />
-                </button>
-              )}
-            </div>
-          ))}
+
+        <div ref={scrollRef} className="flex-1 flex overflow-x-auto hide-scrollbar space-x-2 snap-x px-1">
+          {data.days.map((day, index) => {
+            const isActive = activeDayId === day.id;
+            return (
+              <div
+                key={day.id}
+                onClick={() => setActiveDayId(day.id)}
+                className="flex-shrink-0 snap-start flex items-center px-4 py-2 rounded-xl cursor-pointer transition-all duration-200"
+                style={
+                  isActive
+                    ? {
+                        backgroundColor: rc.blue,
+                        color: '#07080a',
+                        boxShadow: `0 0 16px rgba(85, 179, 255, 0.3)`,
+                      }
+                    : {
+                        backgroundColor: rc.surface,
+                        color: rc.textSec,
+                        border: `1px solid ${rc.border}`,
+                      }
+                }
+              >
+                <span className="font-semibold whitespace-nowrap text-[15px]">
+                  {getDayLabel(day, index)}
+                </span>
+                {mode === 'admin' && (
+                  <button
+                    onClick={(e) => handleRemoveDay(day.id, e)}
+                    className="ml-2 p-1 rounded-md transition-colors"
+                    style={{
+                      color: isActive ? 'rgba(7,8,10,0.6)' : rc.textDim,
+                    }}
+                    onMouseEnter={e => (e.currentTarget.style.color = rc.red)}
+                    onMouseLeave={e => (e.currentTarget.style.color = isActive ? 'rgba(7,8,10,0.6)' : '#6a6b6c')}
+                  >
+                    <Trash2 size={16} />
+                  </button>
+                )}
+              </div>
+            );
+          })}
 
           {mode === 'admin' && (
             <button
               onClick={handleAddDay}
-              className="flex-shrink-0 flex items-center px-4 py-2 rounded-xl border border-dashed border-slate-300 text-slate-500 hover:bg-slate-100 hover:text-slate-800 hover:border-slate-400 transition-all shadow-sm bg-slate-50"
+              className="flex-shrink-0 flex items-center px-4 py-2 rounded-xl transition-all"
+              style={{
+                backgroundColor: 'transparent',
+                color: rc.textSec,
+                border: `1px dashed ${rc.borderSolid}`,
+              }}
+              onMouseEnter={e => {
+                e.currentTarget.style.borderColor = rc.blue;
+                e.currentTarget.style.color = rc.blue;
+              }}
+              onMouseLeave={e => {
+                e.currentTarget.style.borderColor = rc.borderSolid;
+                e.currentTarget.style.color = rc.textSec;
+              }}
             >
               <Plus size={18} className="mr-1" />
               <span className="font-medium whitespace-nowrap text-[15px]">일정 추가</span>
@@ -87,7 +139,13 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
           )}
         </div>
 
-        <button onClick={() => scroll('right')} className="p-2 text-slate-400 hover:text-slate-800 transition-colors">
+        <button
+          onClick={() => scroll('right')}
+          className="p-2 rounded-lg transition-colors"
+          style={{ color: rc.textSec }}
+          onMouseEnter={e => (e.currentTarget.style.color = rc.textMain)}
+          onMouseLeave={e => (e.currentTarget.style.color = rc.textSec)}
+        >
           <ChevronRight size={20} />
         </button>
       </div>
