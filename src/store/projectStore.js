@@ -112,18 +112,27 @@ export const useProjectStore = create((set, get) => ({
     await get().fetchFromDB();
     set({ isInitialized: true });
 
-    supabase.channel('public:any_changes')
-      .on('postgres_changes', { event: '*', schema: 'public' }, () => {
-        // 내가 타이핑 중일 때(최근 2초 이내 업데이트 발생) DB에서 다시 불러오면 한글 타이핑이 끊기는 현상 방지
-        const timeSinceLastUpdate = Date.now() - get().lastUpdateTime;
-        if (timeSinceLastUpdate > 2000) {
-          get().fetchFromDB();
-        } else {
-          clearTimeout(get().fetchTimer);
-          set({ fetchTimer: setTimeout(() => get().fetchFromDB(), 2000) });
-        }
-      })
-      .subscribe();
+    // 기존 채널이 있으면 제거 후 재생성 (더블 마운트 방어)
+    try {
+      await supabase.removeChannel(supabase.channel('public:any_changes'));
+    } catch (_) {}
+
+    try {
+      supabase.channel('public:any_changes')
+        .on('postgres_changes', { event: '*', schema: 'public' }, () => {
+          // 내가 타이핑 중일 때(최근 2초 이내 업데이트 발생) DB에서 다시 불러오면 한글 타이핑이 끊기는 현상 방지
+          const timeSinceLastUpdate = Date.now() - get().lastUpdateTime;
+          if (timeSinceLastUpdate > 2000) {
+            get().fetchFromDB();
+          } else {
+            clearTimeout(get().fetchTimer);
+            set({ fetchTimer: setTimeout(() => get().fetchFromDB(), 2000) });
+          }
+        })
+        .subscribe();
+    } catch (e) {
+      console.warn('[Realtime] 쳄널 등록 실패, 무시합니다:', e.message);
+    }
   },
 
   fetchFromDB: async () => {
