@@ -1,21 +1,9 @@
 @import "tailwindcss";
 
-@theme {
-  --color-raycast-bg: #07080a;
-  --color-raycast-surface: #101111;
-  --color-raycast-card: #1b1c1e;
-  --color-raycast-border: rgba(255, 255, 255, 0.06);
-  --color-raycast-border-solid: #252829;
-  --color-raycast-text-main: #f9f9f9;
-  --color-raycast-text-sec: #9c9c9d;
-  --color-raycast-red: #FF6363;
-  --color-raycast-blue: #55b3ff;
-}
-
 body {
   font-family: 'Pretendard Variable', Pretendard, -apple-system, BlinkMacSystemFont, system-ui, Roboto, 'Helvetica Neue', 'Segoe UI', 'Apple SD Gothic Neo', 'Noto Sans KR', 'Malgun Gothic', 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', sans-serif;
-  background-color: var(--color-raycast-bg);
-  color: var(--color-raycast-text-main);
+  background-color: #ffffff;
+  color: #000000;
   -webkit-font-smoothing: antialiased;
 }
 
@@ -27,17 +15,26 @@ body {
   scrollbar-width: none;
 }
 
-/* Raycast 스타일 버튼 섀도우 */
-.btn-mac {
-  box-shadow:
-    0 1px 2px rgba(0, 0, 0, 0.4),
-    inset 0 1px 0 rgba(255, 255, 255, 0.08),
-    inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+/* Vercel Aesthetic - Blueprint Grid */
+.blueprint-grid {
+  background-color: #f8fafc;
+  background-size: 40px 40px;
+  background-image:
+    linear-gradient(to right, rgba(0, 0, 0, 0.06) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(0, 0, 0, 0.06) 1px, transparent 1px);
 }
 
-/* Raycast 스타일 인풋 섀도우 */
+/* Vercel 스타일 버튼 섀도우 */
+.btn-mac {
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.08),
+    inset 0 1px 0 rgba(255, 255, 255, 0.9),
+    inset 0 -1px 0 rgba(0, 0, 0, 0.04);
+}
+
+/* Vercel 스타일 인풋 섀도우 */
 .input-mac {
   box-shadow:
-    inset 0 1px 4px rgba(0, 0, 0, 0.4),
-    0 1px 0 rgba(255, 255, 255, 0.04);
+    inset 0 1px 2px rgba(0, 0, 0, 0.04),
+    0 1px 0 rgba(255, 255, 255, 1);
 }

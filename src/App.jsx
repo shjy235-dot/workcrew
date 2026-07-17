@@ -10,31 +10,25 @@ function App() {
   const { data, mode, workerName, initDB } = useProjectStore();
   const [activeDayId, setActiveDayId] = useState('');
 
-  // Initialize DB and Realtime sync
   useEffect(() => {
     initDB();
   }, [initDB]);
 
   useEffect(() => {
-    // Remove old URL sharing param without reloading
     const params = new URLSearchParams(window.location.search);
     if (params.get('data')) {
       window.history.replaceState({}, document.title, window.location.pathname);
     }
-    
-    // Set initial active day
     if (data.days.length > 0 && !activeDayId) {
       setActiveDayId(data.days[0].id);
     }
   }, [data.days, activeDayId]);
 
   return (
-    <div className="min-h-screen flex justify-center" style={{ backgroundColor: '#07080a' }}>
-      <div className="w-full max-w-md min-h-screen relative overflow-x-hidden flex flex-col" style={{ backgroundColor: '#07080a', borderLeft: '1px solid rgba(255,255,255,0.06)', borderRight: '1px solid rgba(255,255,255,0.06)' }}>
+    <div className="min-h-screen blueprint-grid flex justify-center">
+      <div className="w-full max-w-md bg-white shadow-2xl min-h-screen relative overflow-x-hidden flex flex-col border-x border-[#E5E7EB]">
         {mode === 'worker' && !workerName && <WorkerAuthModal />}
-        
         <TopBar />
-        
         <main className="flex-1 overflow-y-auto hide-scrollbar relative">
           <Dashboard />
           <DayNavigation activeDayId={activeDayId} setActiveDayId={setActiveDayId} />

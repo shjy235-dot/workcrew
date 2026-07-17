@@ -1,19 +1,22 @@
 import React, { useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { Plus, Trash2, CheckCircle2, Clock, PlayCircle, MapPin, Wrench, Target, MessageSquare } from 'lucide-react';
+import { Plus, Trash2, CheckCircle2, PlayCircle, MapPin, Wrench, Target, MessageSquare } from 'lucide-react';
 
-// Raycast 다크 테마 토큰
-const rc = {
-  bg: '#07080a',
-  surface: '#101111',
-  card: '#1b1c1e',
-  border: 'rgba(255, 255, 255, 0.06)',
-  borderSolid: '#252829',
-  textMain: '#f9f9f9',
-  textSec: '#9c9c9d',
-  textDim: '#6a6b6c',
-  red: '#FF6363',
-  blue: '#55b3ff',
+// Vercel 모노크롬 토큰 (60-30-10 법칙)
+const vc = {
+  bg: '#ffffff',        // 60% - 메인 배경
+  surface: '#fafafa',  // 30% - 섹션 배경
+  border: '#E5E7EB',
+  borderDark: '#D1D5DB',
+  textMain: '#000000',
+  textSec: '#6B7280',
+  textDim: '#9CA3AF',
+  accent: '#000000',   // 10% - 순수 블랙 강조
+  red: '#DC2626',
+  // Semantic colors (접근성 유지)
+  blue: '#2563EB',
+  green: '#16A34A',
+  amber: '#D97706',
 };
 
 export default function DayModule({ activeDayId }) {
@@ -40,48 +43,44 @@ export default function DayModule({ activeDayId }) {
   };
 
   const cardStyle = {
-    backgroundColor: rc.surface,
-    border: `1px solid ${rc.border}`,
+    backgroundColor: vc.bg,
+    border: `1px solid ${vc.border}`,
     borderRadius: '16px',
-    boxShadow: 'rgb(27 28 30) 0px 0px 0px 1px, 0 8px 32px rgba(0,0,0,0.5)',
+    boxShadow: '0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
     overflow: 'hidden',
-    marginBottom: '24px',
+    marginBottom: '20px',
   };
 
   const inputStyle = {
-    backgroundColor: rc.card,
-    border: `1px solid ${rc.borderSolid}`,
-    color: rc.textMain,
+    backgroundColor: vc.surface,
+    border: `1px solid ${vc.border}`,
+    color: vc.textMain,
     borderRadius: '12px',
   };
 
   const labelStyle = {
     fontSize: '10px',
     fontWeight: '700',
-    color: rc.textDim,
+    color: vc.textDim,
     textTransform: 'uppercase',
     letterSpacing: '0.08em',
   };
 
   return (
-    <div className="p-4 pb-28" style={{ backgroundColor: rc.bg }}>
+    <div className="p-4 pb-28" style={{ backgroundColor: '#f8fafc' }}>
       {day.tasks.length === 0 ? (
         <div
           className="text-center py-12 rounded-2xl"
-          style={{ border: `2px dashed ${rc.borderSolid}`, backgroundColor: rc.surface }}
+          style={{ border: `2px dashed ${vc.border}`, backgroundColor: vc.bg }}
         >
-          <p className="mb-3 font-medium" style={{ color: rc.textSec }}>
+          <p className="mb-3 font-medium" style={{ color: vc.textSec }}>
             등록된 작업 내역이 없습니다.
           </p>
           {mode === 'admin' && (
             <button
               onClick={() => addTask(day.id)}
-              className="px-6 py-3 rounded-xl text-[13px] font-medium flex items-center justify-center mx-auto transition-all min-h-[44px]"
-              style={{
-                backgroundColor: rc.blue,
-                color: rc.bg,
-                boxShadow: `0 0 20px rgba(85, 179, 255, 0.3)`,
-              }}
+              className="px-6 py-3 rounded-xl text-[13px] font-medium flex items-center justify-center mx-auto transition-all min-h-[44px] btn-mac"
+              style={{ backgroundColor: vc.accent, color: '#ffffff', border: `1px solid ${vc.accent}` }}
             >
               <Plus size={18} className="mr-2" />
               첫 작업 추가하기
@@ -94,7 +93,7 @@ export default function DayModule({ activeDayId }) {
             {/* 헤더 */}
             <div
               className="px-5 py-3.5 flex justify-between items-center"
-              style={{ borderBottom: `1px solid ${rc.border}`, backgroundColor: rc.card }}
+              style={{ borderBottom: `1px solid ${vc.border}`, backgroundColor: vc.surface }}
             >
               {mode === 'admin' ? (
                 <input
@@ -103,10 +102,10 @@ export default function DayModule({ activeDayId }) {
                   onChange={(e) => updateTask(day.id, task.id, { title: e.target.value })}
                   placeholder={`작업 #${index + 1}`}
                   className="font-bold text-[18px] tracking-tight bg-transparent border-none focus:outline-none w-full"
-                  style={{ color: rc.textMain }}
+                  style={{ color: vc.textMain }}
                 />
               ) : (
-                <h3 className="font-bold text-[18px] tracking-tight" style={{ color: rc.textMain }}>
+                <h3 className="font-bold text-[18px] tracking-tight" style={{ color: vc.textMain }}>
                   {task.title || `작업 #${index + 1}`}
                 </h3>
               )}
@@ -116,9 +115,9 @@ export default function DayModule({ activeDayId }) {
                     if (window.confirm('이 작업을 삭제하시겠습니까?')) removeTask(day.id, task.id);
                   }}
                   className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg transition-colors"
-                  style={{ color: rc.textDim }}
-                  onMouseEnter={e => (e.currentTarget.style.color = rc.red)}
-                  onMouseLeave={e => (e.currentTarget.style.color = rc.textDim)}
+                  style={{ color: vc.textDim }}
+                  onMouseEnter={e => (e.currentTarget.style.color = vc.red)}
+                  onMouseLeave={e => (e.currentTarget.style.color = vc.textDim)}
                 >
                   <Trash2 size={20} />
                 </button>
@@ -129,7 +128,7 @@ export default function DayModule({ activeDayId }) {
               {/* 작업 범위 */}
               <div className="flex flex-col space-y-1.5">
                 <div className="flex items-center mb-1">
-                  <MapPin size={16} className="mr-2 flex-shrink-0" style={{ color: rc.textDim }} />
+                  <MapPin size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>작업 범위 (Work Scope)</label>
                 </div>
                 {mode === 'admin' ? (
@@ -137,12 +136,14 @@ export default function DayModule({ activeDayId }) {
                     value={task.scope || ''}
                     onChange={(e) => updateTask(day.id, task.id, { scope: e.target.value })}
                     placeholder="예: A동 1층 로비"
-                    className="w-full px-4 py-3 text-[15px] focus:outline-none transition-all min-h-[44px]"
-                    style={inputStyle}
+                    className="w-full px-4 py-3 text-[15px] focus:outline-none transition-all min-h-[44px] input-mac"
+                    style={{ ...inputStyle }}
+                    onFocus={e => (e.currentTarget.style.borderColor = vc.accent)}
+                    onBlur={e => (e.currentTarget.style.borderColor = vc.border)}
                   />
                 ) : (
-                  <div className="px-4 py-3 min-h-[44px] flex items-center rounded-xl" style={{ backgroundColor: rc.card, border: `1px solid ${rc.border}` }}>
-                    <p className="font-medium text-[15px]" style={{ color: task.scope ? rc.textMain : rc.textDim }}>
+                  <div className="px-4 py-3 min-h-[44px] flex items-center rounded-xl" style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}>
+                    <p className="font-medium text-[15px]" style={{ color: task.scope ? vc.textMain : vc.textDim }}>
                       {task.scope || '-'}
                     </p>
                   </div>
@@ -152,7 +153,7 @@ export default function DayModule({ activeDayId }) {
               {/* 에어컨 종류 및 수량 */}
               <div className="flex flex-col space-y-1.5">
                 <div className="flex items-center mb-1">
-                  <Target size={16} className="mr-2 flex-shrink-0" style={{ color: rc.textDim }} />
+                  <Target size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>에어컨 종류 및 수량</label>
                 </div>
                 {mode === 'admin' ? (
@@ -161,7 +162,7 @@ export default function DayModule({ activeDayId }) {
                       value={task.acType || ''}
                       onChange={(e) => updateTask(day.id, task.id, { acType: e.target.value })}
                       className="flex-1 px-4 py-3 text-[15px] min-h-[44px] focus:outline-none transition-all appearance-none"
-                      style={{ ...inputStyle, colorScheme: 'dark' }}
+                      style={inputStyle}
                     >
                       <option value="">선택</option>
                       <option value="벽걸이">벽걸이</option>
@@ -173,7 +174,7 @@ export default function DayModule({ activeDayId }) {
                     </select>
                     <div
                       className="flex items-center w-24 rounded-xl overflow-hidden min-h-[44px]"
-                      style={{ backgroundColor: rc.card, border: `1px solid ${rc.borderSolid}` }}
+                      style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
                     >
                       <input
                         type="number"
@@ -181,13 +182,13 @@ export default function DayModule({ activeDayId }) {
                         onChange={(e) => updateTask(day.id, task.id, { acCount: e.target.value })}
                         placeholder="0"
                         className="w-full bg-transparent p-3 text-[15px] font-medium focus:outline-none text-center"
-                        style={{ color: rc.textMain }}
+                        style={{ color: vc.textMain }}
                       />
                     </div>
                   </div>
                 ) : (
-                  <div className="px-4 py-3 min-h-[44px] flex items-center rounded-xl" style={{ backgroundColor: rc.card, border: `1px solid ${rc.border}` }}>
-                    <p className="font-medium text-[15px]" style={{ color: task.acType ? rc.textMain : rc.textDim }}>
+                  <div className="px-4 py-3 min-h-[44px] flex items-center rounded-xl" style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}>
+                    <p className="font-medium text-[15px]" style={{ color: task.acType ? vc.textMain : vc.textDim }}>
                       {task.acType ? `${task.acType} ${task.acCount}대` : '-'}
                     </p>
                   </div>
@@ -197,19 +198,16 @@ export default function DayModule({ activeDayId }) {
               {/* 진행 수량 */}
               <div className="flex flex-col space-y-1.5">
                 <div className="flex items-center mb-1">
-                  <CheckCircle2 size={16} className="mr-2 flex-shrink-0" style={{ color: rc.textDim }} />
+                  <CheckCircle2 size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>진행 수량 (완료 / 미완료)</label>
                 </div>
                 <div className="grid grid-cols-2 gap-4 w-full">
                   {/* 완료 수량 */}
                   <div
                     className="flex flex-col p-4 rounded-xl min-h-[72px] justify-center"
-                    style={{
-                      backgroundColor: 'rgba(85, 179, 255, 0.08)',
-                      border: `1px solid rgba(85, 179, 255, 0.2)`,
-                    }}
+                    style={{ backgroundColor: '#EFF6FF', border: '1px solid #BFDBFE' }}
                   >
-                    <span className="text-[10px] font-bold mb-1" style={{ color: rc.blue }}>완료 수량</span>
+                    <span className="text-[10px] font-bold mb-1" style={{ color: vc.blue }}>완료 수량</span>
                     <div className="flex items-center">
                       <input
                         type="number"
@@ -217,67 +215,65 @@ export default function DayModule({ activeDayId }) {
                         onChange={(e) => updateTask(day.id, task.id, { completedCount: e.target.value })}
                         placeholder="0"
                         className="w-full bg-transparent text-[20px] font-bold focus:outline-none min-h-[32px]"
-                        style={{ color: rc.textMain }}
+                        style={{ color: vc.textMain }}
                       />
-                      <span className="text-[15px] font-medium" style={{ color: rc.textSec }}>대</span>
+                      <span className="text-[15px] font-medium" style={{ color: vc.textSec }}>대</span>
                     </div>
                   </div>
                   {/* 잔여 수량 */}
                   <div
                     className="flex flex-col p-4 rounded-xl min-h-[72px] justify-center"
-                    style={{ backgroundColor: rc.card, border: `1px solid ${rc.borderSolid}` }}
+                    style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
                   >
-                    <span className="text-[10px] font-bold mb-1" style={{ color: rc.textDim }}>잔여 수량</span>
+                    <span className="text-[10px] font-bold mb-1" style={{ color: vc.textDim }}>잔여 수량</span>
                     <div className="flex items-center">
-                      <div className="w-full text-[20px] font-bold min-h-[32px] flex items-center" style={{ color: rc.textMain }}>
+                      <div className="w-full text-[20px] font-bold min-h-[32px] flex items-center" style={{ color: vc.textMain }}>
                         {Math.max(0, (Number(task.acCount) || 0) - (Number(task.completedCount) || 0))}
                       </div>
-                      <span className="text-[15px] font-medium" style={{ color: rc.textSec }}>대</span>
+                      <span className="text-[15px] font-medium" style={{ color: vc.textSec }}>대</span>
                     </div>
                   </div>
                 </div>
               </div>
 
               {/* 진행 상태 */}
-              <div className="pt-5" style={{ borderTop: `1px solid ${rc.border}` }}>
+              <div className="pt-5" style={{ borderTop: `1px solid ${vc.border}` }}>
                 <div className="flex items-center mb-4">
-                  <Wrench size={16} className="mr-2" style={{ color: rc.textDim }} />
+                  <Wrench size={16} className="mr-2" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>진행 상태 (Status)</label>
                 </div>
-                <div className="flex p-1 rounded-xl" style={{ backgroundColor: rc.card }}>
-                  {/* 진행중 버튼 */}
+                <div className="flex p-1 rounded-xl" style={{ backgroundColor: vc.surface }}>
                   <button
                     onClick={() => handleStatusChange(task.id, 'in-progress')}
                     className="flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium"
                     style={
                       task.status === 'in-progress'
-                        ? { backgroundColor: rc.surface, color: rc.blue, boxShadow: `0 0 12px rgba(85,179,255,0.15)`, border: `1px solid rgba(85,179,255,0.3)` }
-                        : { color: rc.textDim }
+                        ? { backgroundColor: vc.bg, color: vc.blue, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', border: `1px solid ${vc.border}` }
+                        : { color: vc.textDim }
                     }
                   >
-                    <PlayCircle size={18} className="mr-2" style={{ color: task.status === 'in-progress' ? rc.blue : rc.textDim }} />
+                    <PlayCircle size={18} className="mr-2" style={{ color: task.status === 'in-progress' ? vc.blue : vc.textDim }} />
                     진행중
                   </button>
-                  {/* 완료 버튼 */}
                   <button
                     onClick={() => handleStatusChange(task.id, 'completed')}
                     className="flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium"
                     style={
                       task.status === 'completed'
-                        ? { backgroundColor: rc.surface, color: '#5fc992', boxShadow: `0 0 12px rgba(95,201,146,0.15)`, border: `1px solid rgba(95,201,146,0.3)` }
-                        : { color: rc.textDim }
+                        ? { backgroundColor: vc.bg, color: vc.green, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', border: `1px solid ${vc.border}` }
+                        : { color: vc.textDim }
                     }
                   >
-                    <CheckCircle2 size={18} className="mr-2" style={{ color: task.status === 'completed' ? '#5fc992' : rc.textDim }} />
+                    <CheckCircle2 size={18} className="mr-2" style={{ color: task.status === 'completed' ? vc.green : vc.textDim }} />
                     작업완료
                   </button>
                 </div>
               </div>
 
               {/* 현장 메모 */}
-              <div className="pt-5" style={{ borderTop: `1px solid ${rc.border}` }}>
+              <div className="pt-5" style={{ borderTop: `1px solid ${vc.border}` }}>
                 <div className="flex items-center mb-4">
-                  <MessageSquare size={16} className="mr-2" style={{ color: rc.textDim }} />
+                  <MessageSquare size={16} className="mr-2" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>현장 메모 / 특이사항</label>
                 </div>
 
@@ -290,12 +286,9 @@ export default function DayModule({ activeDayId }) {
                         <div
                           key={lineIndex}
                           className="flex justify-between items-start p-4 rounded-xl"
-                          style={{
-                            backgroundColor: 'rgba(255, 188, 51, 0.06)',
-                            border: `1px solid rgba(255, 188, 51, 0.15)`,
-                          }}
+                          style={{ backgroundColor: '#FFFBEB', border: '1px solid #FDE68A' }}
                         >
-                          <div className="text-[13px] whitespace-pre-wrap leading-relaxed flex-1" style={{ color: rc.textSec }}>
+                          <div className="text-[13px] whitespace-pre-wrap leading-relaxed flex-1" style={{ color: '#92400E' }}>
                             {line}
                           </div>
                           <button
@@ -307,9 +300,9 @@ export default function DayModule({ activeDayId }) {
                               }
                             }}
                             className="min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg transition-colors ml-2 flex-shrink-0"
-                            style={{ color: rc.textDim }}
-                            onMouseEnter={e => (e.currentTarget.style.color = rc.red)}
-                            onMouseLeave={e => (e.currentTarget.style.color = rc.textDim)}
+                            style={{ color: vc.textDim }}
+                            onMouseEnter={e => (e.currentTarget.style.color = vc.red)}
+                            onMouseLeave={e => (e.currentTarget.style.color = vc.textDim)}
                           >
                             <Trash2 size={18} />
                           </button>
@@ -325,19 +318,17 @@ export default function DayModule({ activeDayId }) {
                     onChange={(e) => setMemoInput({ ...memoInput, [task.id]: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleMemoSubmit(task.id)}
                     placeholder="현장 특이사항을 입력하세요..."
-                    className="flex-1 px-4 py-3 text-[15px] focus:outline-none transition-shadow min-h-[44px]"
+                    className="flex-1 px-4 py-3 text-[15px] focus:outline-none transition-shadow min-h-[44px] input-mac"
                     style={inputStyle}
+                    onFocus={e => (e.currentTarget.style.borderColor = vc.accent)}
+                    onBlur={e => (e.currentTarget.style.borderColor = vc.border)}
                   />
                   <button
                     onClick={() => handleMemoSubmit(task.id)}
-                    className="px-5 py-3 rounded-xl text-[13px] font-medium transition-all whitespace-nowrap min-h-[44px] flex items-center justify-center"
-                    style={{
-                      backgroundColor: 'rgba(255,255,255,0.08)',
-                      color: rc.textMain,
-                      border: `1px solid ${rc.border}`,
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.12)')}
-                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.08)')}
+                    className="px-5 py-3 rounded-xl text-[13px] font-medium transition-all whitespace-nowrap min-h-[44px] flex items-center justify-center btn-mac"
+                    style={{ backgroundColor: vc.accent, color: '#ffffff', border: `1px solid ${vc.accent}` }}
+                    onMouseEnter={e => (e.currentTarget.style.backgroundColor = '#222222')}
+                    onMouseLeave={e => (e.currentTarget.style.backgroundColor = vc.accent)}
                   >
                     등록
                   </button>
@@ -353,17 +344,19 @@ export default function DayModule({ activeDayId }) {
           onClick={() => addTask(day.id)}
           className="w-full py-4 rounded-2xl font-medium flex items-center justify-center transition-all min-h-[44px] text-[13px]"
           style={{
-            backgroundColor: 'transparent',
-            color: rc.textDim,
-            border: `2px dashed ${rc.borderSolid}`,
+            backgroundColor: vc.bg,
+            color: vc.textDim,
+            border: `2px dashed ${vc.border}`,
           }}
           onMouseEnter={e => {
-            e.currentTarget.style.borderColor = rc.blue;
-            e.currentTarget.style.color = rc.blue;
+            e.currentTarget.style.borderColor = vc.accent;
+            e.currentTarget.style.color = vc.accent;
+            e.currentTarget.style.backgroundColor = vc.surface;
           }}
           onMouseLeave={e => {
-            e.currentTarget.style.borderColor = rc.borderSolid;
-            e.currentTarget.style.color = rc.textDim;
+            e.currentTarget.style.borderColor = vc.border;
+            e.currentTarget.style.color = vc.textDim;
+            e.currentTarget.style.backgroundColor = vc.bg;
           }}
         >
           <Plus size={18} className="mr-2" />

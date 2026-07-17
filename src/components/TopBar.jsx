@@ -1,9 +1,21 @@
 import React, { useState } from 'react';
-import { Share2, UserCog, User, Copy, Check } from 'lucide-react';
+import { Share2, UserCog, User, Check } from 'lucide-react';
 import { useProjectStore } from '../store/projectStore';
 
+// Vercel 모노크롬 토큰
+const vc = {
+  bg: '#ffffff',
+  surface: '#fafafa',
+  border: '#E5E7EB',
+  borderDark: '#D1D5DB',
+  textMain: '#000000',
+  textSec: '#6B7280',
+  textDim: '#9CA3AF',
+  accent: '#000000',    // 10% 강조 = 순수 블랙
+};
+
 export default function TopBar() {
-  const { mode, setMode, getShareUrl, workerName, setWorkerName } = useProjectStore();
+  const { mode, setMode, getShareUrl, workerName } = useProjectStore();
   const [copied, setCopied] = useState(false);
 
   const handleShare = async () => {
@@ -34,21 +46,21 @@ export default function TopBar() {
     <div
       className="p-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md"
       style={{
-        backgroundColor: 'rgba(7, 8, 10, 0.85)',
-        borderBottom: '1px solid rgba(255, 255, 255, 0.06)',
+        backgroundColor: 'rgba(255, 255, 255, 0.92)',
+        borderBottom: `1px solid ${vc.border}`,
       }}
     >
       <div className="flex items-center space-x-3">
-        <h1 className="text-[20px] font-bold tracking-tight" style={{ color: '#f9f9f9' }}>
+        <h1 className="text-[20px] font-bold tracking-tight" style={{ color: vc.textMain }}>
           누리종합환경
         </h1>
         {mode === 'worker' && workerName && (
           <span
             className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium"
             style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.06)',
-              color: '#9c9c9d',
-              border: '1px solid rgba(255, 255, 255, 0.08)',
+              backgroundColor: vc.surface,
+              color: vc.textSec,
+              border: `1px solid ${vc.border}`,
             }}
           >
             <User size={12} className="mr-1" />
@@ -60,14 +72,14 @@ export default function TopBar() {
       <div className="flex items-center space-x-2">
         <button
           onClick={handleShare}
-          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg transition-all"
+          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg transition-all btn-mac"
           style={{
-            backgroundColor: 'rgba(255, 255, 255, 0.06)',
-            color: copied ? '#55b3ff' : '#9c9c9d',
-            border: '1px solid rgba(255, 255, 255, 0.08)',
+            backgroundColor: vc.bg,
+            color: copied ? '#000000' : vc.textSec,
+            border: `1px solid ${vc.border}`,
           }}
-          onMouseEnter={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.1)')}
-          onMouseLeave={e => (e.currentTarget.style.backgroundColor = 'rgba(255,255,255,0.06)')}
+          onMouseEnter={e => (e.currentTarget.style.backgroundColor = vc.surface)}
+          onMouseLeave={e => (e.currentTarget.style.backgroundColor = vc.bg)}
         >
           {copied ? <Check size={18} /> : <Share2 size={18} />}
           <span className="text-[13px] font-medium">{copied ? '복사됨' : '공유'}</span>
@@ -75,18 +87,18 @@ export default function TopBar() {
 
         <button
           onClick={toggleMode}
-          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all"
+          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all btn-mac"
           style={
             mode === 'admin'
               ? {
-                  backgroundColor: '#FF6363',
+                  backgroundColor: '#000000',
                   color: '#ffffff',
-                  border: '1px solid #FF6363',
+                  border: '1px solid #000000',
                 }
               : {
-                  backgroundColor: 'rgba(255, 255, 255, 0.06)',
-                  color: '#9c9c9d',
-                  border: '1px solid rgba(255, 255, 255, 0.08)',
+                  backgroundColor: vc.bg,
+                  color: vc.textSec,
+                  border: `1px solid ${vc.border}`,
                 }
           }
         >

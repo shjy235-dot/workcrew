@@ -2,16 +2,16 @@ import React, { useRef } from 'react';
 import { Plus, Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
 import { useProjectStore } from '../store/projectStore';
 
-const rc = {
-  bg: '#07080a',
-  surface: '#101111',
-  card: '#1b1c1e',
-  border: 'rgba(255, 255, 255, 0.06)',
-  borderSolid: '#252829',
-  textMain: '#f9f9f9',
-  textSec: '#9c9c9d',
-  blue: '#55b3ff',
-  red: '#FF6363',
+// Vercel 모노크롬 토큰
+const vc = {
+  bg: '#ffffff',
+  surface: '#fafafa',
+  border: '#E5E7EB',
+  textMain: '#000000',
+  textSec: '#6B7280',
+  textDim: '#9CA3AF',
+  accent: '#000000',
+  red: '#DC2626',
 };
 
 export default function DayNavigation({ activeDayId, setActiveDayId }) {
@@ -20,9 +20,8 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
 
   const scroll = (direction) => {
     if (scrollRef.current) {
-      const scrollAmount = 150;
       scrollRef.current.scrollBy({
-        left: direction === 'left' ? -scrollAmount : scrollAmount,
+        left: direction === 'left' ? -150 : 150,
         behavior: 'smooth',
       });
     }
@@ -58,17 +57,18 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
       className="sticky z-30"
       style={{
         top: '68px',
-        backgroundColor: rc.bg,
-        borderBottom: `1px solid ${rc.border}`,
+        backgroundColor: vc.bg,
+        borderBottom: `1px solid ${vc.border}`,
+        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
       }}
     >
       <div className="flex items-center px-2 py-2">
         <button
           onClick={() => scroll('left')}
           className="p-2 rounded-lg transition-colors"
-          style={{ color: rc.textSec }}
-          onMouseEnter={e => (e.currentTarget.style.color = rc.textMain)}
-          onMouseLeave={e => (e.currentTarget.style.color = rc.textSec)}
+          style={{ color: vc.textDim }}
+          onMouseEnter={e => (e.currentTarget.style.color = vc.textMain)}
+          onMouseLeave={e => (e.currentTarget.style.color = vc.textDim)}
         >
           <ChevronLeft size={20} />
         </button>
@@ -84,14 +84,14 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
                 style={
                   isActive
                     ? {
-                        backgroundColor: rc.blue,
-                        color: '#07080a',
-                        boxShadow: `0 0 16px rgba(85, 179, 255, 0.3)`,
+                        backgroundColor: vc.accent,
+                        color: '#ffffff',
+                        boxShadow: '0 2px 8px rgba(0,0,0,0.2)',
                       }
                     : {
-                        backgroundColor: rc.surface,
-                        color: rc.textSec,
-                        border: `1px solid ${rc.border}`,
+                        backgroundColor: vc.surface,
+                        color: vc.textSec,
+                        border: `1px solid ${vc.border}`,
                       }
                 }
               >
@@ -102,11 +102,9 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
                   <button
                     onClick={(e) => handleRemoveDay(day.id, e)}
                     className="ml-2 p-1 rounded-md transition-colors"
-                    style={{
-                      color: isActive ? 'rgba(7,8,10,0.6)' : rc.textDim,
-                    }}
-                    onMouseEnter={e => (e.currentTarget.style.color = rc.red)}
-                    onMouseLeave={e => (e.currentTarget.style.color = isActive ? 'rgba(7,8,10,0.6)' : '#6a6b6c')}
+                    style={{ color: isActive ? 'rgba(255,255,255,0.5)' : vc.textDim }}
+                    onMouseEnter={e => (e.currentTarget.style.color = vc.red)}
+                    onMouseLeave={e => (e.currentTarget.style.color = isActive ? 'rgba(255,255,255,0.5)' : vc.textDim)}
                   >
                     <Trash2 size={16} />
                   </button>
@@ -121,16 +119,18 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
               className="flex-shrink-0 flex items-center px-4 py-2 rounded-xl transition-all"
               style={{
                 backgroundColor: 'transparent',
-                color: rc.textSec,
-                border: `1px dashed ${rc.borderSolid}`,
+                color: vc.textDim,
+                border: `1px dashed ${vc.border}`,
               }}
               onMouseEnter={e => {
-                e.currentTarget.style.borderColor = rc.blue;
-                e.currentTarget.style.color = rc.blue;
+                e.currentTarget.style.borderColor = vc.accent;
+                e.currentTarget.style.color = vc.accent;
+                e.currentTarget.style.backgroundColor = vc.surface;
               }}
               onMouseLeave={e => {
-                e.currentTarget.style.borderColor = rc.borderSolid;
-                e.currentTarget.style.color = rc.textSec;
+                e.currentTarget.style.borderColor = vc.border;
+                e.currentTarget.style.color = vc.textDim;
+                e.currentTarget.style.backgroundColor = 'transparent';
               }}
             >
               <Plus size={18} className="mr-1" />
@@ -142,9 +142,9 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
         <button
           onClick={() => scroll('right')}
           className="p-2 rounded-lg transition-colors"
-          style={{ color: rc.textSec }}
-          onMouseEnter={e => (e.currentTarget.style.color = rc.textMain)}
-          onMouseLeave={e => (e.currentTarget.style.color = rc.textSec)}
+          style={{ color: vc.textDim }}
+          onMouseEnter={e => (e.currentTarget.style.color = vc.textMain)}
+          onMouseLeave={e => (e.currentTarget.style.color = vc.textDim)}
         >
           <ChevronRight size={20} />
         </button>
