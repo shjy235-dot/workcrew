@@ -143,6 +143,7 @@ export const useProjectStore = create((set, get) => ({
         .filter(t => t.day_id === day.id)
         .map(t => ({
           id: t.id,
+          title: t.title || "",
           scope: t.scope || "",
           acType: t.ac_type || "",
           acCount: t.ac_count || "",
@@ -211,6 +212,7 @@ export const useProjectStore = create((set, get) => ({
     
     const newTask = {
       id: `task-${Date.now()}`,
+      title: "",
       scope: "",
       acType: "",
       acCount: "",
@@ -227,6 +229,7 @@ export const useProjectStore = create((set, get) => ({
     await supabase.from('tasks').insert({
       id: newTask.id,
       day_id: dayId,
+      title: newTask.title,
       scope: newTask.scope,
       ac_type: newTask.acType,
       ac_count: newTask.acCount,
@@ -254,6 +257,7 @@ export const useProjectStore = create((set, get) => ({
     });
 
     const dbPayload = {};
+    if (updates.title !== undefined) dbPayload.title = updates.title;
     if (updates.scope !== undefined) dbPayload.scope = updates.scope;
     if (updates.acType !== undefined) dbPayload.ac_type = updates.acType;
     if (updates.acCount !== undefined) dbPayload.ac_count = updates.acCount;

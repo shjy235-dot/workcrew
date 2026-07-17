@@ -52,7 +52,7 @@ export default function Dashboard() {
               value={data.startDate || ''}
               onChange={(e) => updateProjectInfo({ startDate: e.target.value })}
               disabled={mode === 'worker'}
-              className="flex-1 bg-white border border-slate-300 rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-50 disabled:text-slate-400"
+              className="flex-1 bg-white border border-slate-300 rounded-xl p-3 text-[15px] font-medium min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-50 disabled:text-slate-400"
             />
             <span className="text-slate-300 font-bold">-</span>
             <input
@@ -60,7 +60,7 @@ export default function Dashboard() {
               value={data.endDate || ''}
               onChange={(e) => updateProjectInfo({ endDate: e.target.value })}
               disabled={mode === 'worker'}
-              className="flex-1 bg-white border border-slate-300 rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-50 disabled:text-slate-400"
+              className="flex-1 bg-white border border-slate-300 rounded-xl p-3 text-[15px] font-medium min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-50 disabled:text-slate-400"
             />
           </div>
           {(!data.startDate || !data.endDate) && (
@@ -82,11 +82,11 @@ export default function Dashboard() {
               rows={3}
               value={data.totalVolume || ''}
               onChange={(e) => updateProjectInfo({ totalVolume: e.target.value })}
-              className="w-full bg-white border border-slate-300 input-mac text-slate-800 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[96px]"
+              className="w-full bg-white border border-slate-300 input-mac text-slate-800 text-[15px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[96px]"
               placeholder="예: 천장형 1way 650대, 벽걸이 110대 (총 761대)"
             />
           ) : (
-            <div className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[13px] leading-relaxed rounded-xl p-4 min-h-[96px] whitespace-pre-wrap">
+            <div className="w-full bg-slate-50 border border-slate-200 text-slate-800 text-[15px] leading-relaxed rounded-xl p-4 min-h-[96px] whitespace-pre-wrap">
               {data.totalVolume || "등록된 전체 작업 물량 요약이 없습니다."}
             </div>
           )}
@@ -106,8 +106,8 @@ export default function Dashboard() {
         </div>
 
         {/* Notice Section */}
-        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-md">
-          <div className="flex items-center text-slate-100 mb-4">
+        <div className="bg-rose-950 rounded-2xl p-6 border border-rose-900 shadow-md">
+          <div className="flex items-center text-rose-100 mb-4">
             <FileText size={18} className="mr-2" />
             <h2 className="font-semibold text-[16px]">공지사항</h2>
           </div>
@@ -116,15 +116,15 @@ export default function Dashboard() {
             <textarea
               value={data.notice || ''}
               onChange={(e) => updateProjectInfo({ notice: e.target.value })}
-              className="w-full bg-slate-800/80 border border-transparent input-mac text-slate-100 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-400 transition-shadow min-h-[96px] placeholder:text-slate-500"
+              className="w-full bg-rose-900/50 border border-transparent input-mac text-rose-100 text-[15px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-rose-400 transition-shadow min-h-[96px] placeholder:text-rose-400/50"
               placeholder="작업 전 주의사항을 입력하세요"
             />
           ) : (
-            <div className="w-full bg-slate-800 rounded-xl p-4 min-h-[96px]">
+            <div className="w-full bg-rose-900/50 rounded-xl p-4 min-h-[96px]">
               {data.notice ? (
-                <p className="text-[13px] text-slate-200 leading-relaxed whitespace-pre-wrap">{data.notice}</p>
+                <p className="text-[15px] text-rose-100 leading-relaxed whitespace-pre-wrap">{data.notice}</p>
               ) : (
-                <p className="text-[13px] text-slate-500 italic">등록된 공지사항이 없습니다.</p>
+                <p className="text-[15px] text-rose-400/70 italic">등록된 공지사항이 없습니다.</p>
               )}
             </div>
           )}

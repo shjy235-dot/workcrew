@@ -48,7 +48,17 @@ export default function DayModule({ activeDayId }) {
           <div key={task.id} className="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden mb-6">
             {/* Header / Admin Delete */}
             <div className="bg-slate-50 px-5 py-3.5 border-b border-slate-100 flex justify-between items-center">
-              <h3 className="font-bold text-slate-800 text-lg tracking-tight">작업 #{index + 1}</h3>
+              {mode === 'admin' ? (
+                <input
+                  type="text"
+                  value={task.title || ''}
+                  onChange={(e) => updateTask(day.id, task.id, { title: e.target.value })}
+                  placeholder={`작업 #${index + 1}`}
+                  className="font-bold text-slate-800 text-[18px] tracking-tight bg-transparent border-none focus:outline-none focus:ring-2 focus:ring-slate-300 rounded px-1 placeholder:text-slate-400 w-full"
+                />
+              ) : (
+                <h3 className="font-bold text-slate-800 text-[18px] tracking-tight">{task.title || `작업 #${index + 1}`}</h3>
+              )}
               {mode === 'admin' && (
                 <button 
                   onClick={() => {
@@ -71,14 +81,14 @@ export default function DayModule({ activeDayId }) {
                   </div>
                   {mode === 'admin' ? (
                     <input 
-                      value={task.scope}
+                      value={task.scope || ''}
                       onChange={(e) => updateTask(day.id, task.id, { scope: e.target.value })}
                       placeholder="예: A동 1층 로비"
-                      className="w-full bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-[13px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all min-h-[44px]"
+                      className="w-full bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-[15px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all min-h-[44px]"
                     />
                   ) : (
                     <div className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 min-h-[44px] flex items-center">
-                      <p className="text-slate-900 font-medium text-[16px]">{task.scope || '-'}</p>
+                      <p className="text-slate-900 font-medium text-[15px]">{task.scope || '-'}</p>
                     </div>
                   )}
                 </div>
@@ -93,8 +103,9 @@ export default function DayModule({ activeDayId }) {
                       <select 
                         value={task.acType || ''}
                         onChange={(e) => updateTask(day.id, task.id, { acType: e.target.value })}
-                        className="flex-1 bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-slate-900 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all appearance-none"
+                        className="flex-1 bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-slate-900 text-[15px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all appearance-none"
                       >
+                        <option value="">선택</option>
                         <option value="벽걸이">벽걸이</option>
                         <option value="천장형 1way(EHP)">천장형 1way(EHP)</option>
                         <option value="천장형 1way(FCU)">천장형 1way(FCU)</option>
@@ -108,13 +119,13 @@ export default function DayModule({ activeDayId }) {
                           value={task.acCount || ''}
                           onChange={(e) => updateTask(day.id, task.id, { acCount: e.target.value })}
                           placeholder="0"
-                          className="w-full bg-transparent p-3 text-slate-900 text-[13px] font-medium focus:outline-none text-center"
+                          className="w-full bg-transparent p-3 text-slate-900 text-[15px] font-medium focus:outline-none text-center"
                         />
                       </div>
                     </div>
                   ) : (
                     <div className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 min-h-[44px] flex items-center">
-                      <p className="text-slate-800 font-medium text-[16px]">{task.acType ? `${task.acType} ${task.acCount}대` : '-'}</p>
+                      <p className="text-slate-800 font-medium text-[15px]">{task.acType ? `${task.acType} ${task.acCount}대` : '-'}</p>
                     </div>
                   )}
                 </div>
@@ -135,7 +146,7 @@ export default function DayModule({ activeDayId }) {
                           placeholder="0"
                           className="w-full bg-transparent text-slate-900 text-[20px] font-bold focus:outline-none min-h-[32px]"
                         />
-                        <span className="text-slate-500 text-[13px] font-medium">대</span>
+                        <span className="text-slate-500 text-[15px] font-medium">대</span>
                       </div>
                     </div>
                     <div className="flex flex-col bg-slate-50 border border-slate-300 rounded-xl p-4 shadow-sm min-h-[72px] justify-center">
@@ -144,7 +155,7 @@ export default function DayModule({ activeDayId }) {
                         <div className="w-full text-slate-900 text-[20px] font-bold min-h-[32px] flex items-center">
                           {Math.max(0, (Number(task.acCount) || 0) - (Number(task.completedCount) || 0))}
                         </div>
-                        <span className="text-slate-500 text-[13px] font-medium">대</span>
+                        <span className="text-slate-500 text-[15px] font-medium">대</span>
                       </div>
                     </div>
                   </div>
@@ -160,7 +171,7 @@ export default function DayModule({ activeDayId }) {
                 <div className="flex bg-slate-100 p-1 rounded-xl">
                   <button
                     onClick={() => handleStatusChange(task.id, 'in-progress')}
-                    className={`flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[13px] font-medium ${
+                    className={`flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium ${
                       task.status === 'in-progress' 
                         ? 'bg-white text-blue-600 shadow-sm ring-1 ring-slate-200/50' 
                         : 'text-slate-500 hover:text-slate-700'
@@ -171,7 +182,7 @@ export default function DayModule({ activeDayId }) {
                   </button>
                   <button
                     onClick={() => handleStatusChange(task.id, 'completed')}
-                    className={`flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[13px] font-medium ${
+                    className={`flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium ${
                       task.status === 'completed' 
                         ? 'bg-white text-emerald-600 shadow-sm ring-1 ring-slate-200/50' 
                         : 'text-slate-500 hover:text-slate-700'
@@ -222,7 +233,7 @@ export default function DayModule({ activeDayId }) {
                     onChange={(e) => setMemoInput({ ...memoInput, [task.id]: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleMemoSubmit(task.id)}
                     placeholder="현장 특이사항을 입력하세요..."
-                    className="flex-1 bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[44px]"
+                    className="flex-1 bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-[15px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[44px]"
                   />
                   <button
                     onClick={() => handleMemoSubmit(task.id)}
