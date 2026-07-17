@@ -45,7 +45,7 @@ export default function DayModule({ activeDayId }) {
         </div>
       ) : (
         day.tasks.map((task, index) => (
-          <div key={task.id} className="bg-white rounded-2xl shadow-sm border border-slate-200 overflow-hidden mb-6">
+          <div key={task.id} className="bg-white rounded-2xl shadow-md border border-slate-200 overflow-hidden mb-6">
             {/* Header / Admin Delete */}
             <div className="bg-slate-50 px-5 py-3.5 border-b border-slate-100 flex justify-between items-center">
               <h3 className="font-bold text-slate-800 text-lg tracking-tight">작업 #{index + 1}</h3>
@@ -74,7 +74,7 @@ export default function DayModule({ activeDayId }) {
                       value={task.scope}
                       onChange={(e) => updateTask(day.id, task.id, { scope: e.target.value })}
                       placeholder="예: A동 1층 로비"
-                      className="w-full bg-slate-50 border border-slate-200 input-mac rounded-xl px-4 py-3 text-[13px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all min-h-[44px]"
+                      className="w-full bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-[13px] text-slate-900 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all min-h-[44px]"
                     />
                   ) : (
                     <div className="bg-slate-50 border border-slate-100 rounded-xl px-4 py-3 min-h-[44px] flex items-center">
@@ -93,7 +93,7 @@ export default function DayModule({ activeDayId }) {
                       <select 
                         value={task.acType || ''}
                         onChange={(e) => updateTask(day.id, task.id, { acType: e.target.value })}
-                        className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl px-4 py-3 text-slate-900 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all appearance-none"
+                        className="flex-1 bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-slate-900 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-all appearance-none"
                       >
                         <option value="벽걸이">벽걸이</option>
                         <option value="천장형 1way(EHP)">천장형 1way(EHP)</option>
@@ -102,7 +102,7 @@ export default function DayModule({ activeDayId }) {
                         <option value="천장형 4way(FCU)">천장형 4way(FCU)</option>
                         <option value="스탠드">스탠드</option>
                       </select>
-                      <div className="flex items-center w-24 bg-slate-50 border border-slate-200 input-mac rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-slate-900 transition-all min-h-[44px]">
+                      <div className="flex items-center w-24 bg-white border border-slate-300 input-mac rounded-xl overflow-hidden focus-within:ring-2 focus-within:ring-slate-900 transition-all min-h-[44px]">
                         <input 
                           type="number"
                           value={task.acCount || ''}
@@ -138,7 +138,7 @@ export default function DayModule({ activeDayId }) {
                         <span className="text-slate-500 text-[13px] font-medium">대</span>
                       </div>
                     </div>
-                    <div className="flex flex-col bg-slate-50 border border-slate-200 rounded-xl p-4 shadow-sm min-h-[72px] justify-center">
+                    <div className="flex flex-col bg-slate-50 border border-slate-300 rounded-xl p-4 shadow-sm min-h-[72px] justify-center">
                       <span className="text-[10px] text-slate-500 font-bold mb-1">잔여 수량</span>
                       <div className="flex items-center">
                         <div className="w-full text-slate-900 text-[20px] font-bold min-h-[32px] flex items-center">
@@ -222,7 +222,7 @@ export default function DayModule({ activeDayId }) {
                     onChange={(e) => setMemoInput({ ...memoInput, [task.id]: e.target.value })}
                     onKeyPress={(e) => e.key === 'Enter' && handleMemoSubmit(task.id)}
                     placeholder="현장 특이사항을 입력하세요..."
-                    className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl px-4 py-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[44px]"
+                    className="flex-1 bg-white border border-slate-300 input-mac rounded-xl px-4 py-3 text-[13px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[44px]"
                   />
                   <button
                     onClick={() => handleMemoSubmit(task.id)}

@@ -39,12 +39,12 @@ export default function Dashboard() {
         )}
       </div>
 
-      <div className="space-y-4">
-        {/* Date Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center text-slate-700 mb-3">
-            <Calendar size={18} className="mr-2 text-slate-400" />
-            <span className="font-semibold">기간 설정</span>
+      <div className="space-y-6">
+        {/* Date Section */}
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-md">
+          <div className="flex items-center text-slate-600 mb-4">
+            <Calendar size={18} className="mr-2" />
+            <h2 className="font-semibold text-[16px]">기간 설정</h2>
           </div>
           <div className="flex items-center space-x-2">
             <input
@@ -52,7 +52,7 @@ export default function Dashboard() {
               value={data.startDate || ''}
               onChange={(e) => updateProjectInfo({ startDate: e.target.value })}
               disabled={mode === 'worker'}
-              className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-100 disabled:text-slate-400"
+              className="flex-1 bg-white border border-slate-300 rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-50 disabled:text-slate-400"
             />
             <span className="text-slate-300 font-bold">-</span>
             <input
@@ -60,7 +60,7 @@ export default function Dashboard() {
               value={data.endDate || ''}
               onChange={(e) => updateProjectInfo({ endDate: e.target.value })}
               disabled={mode === 'worker'}
-              className="flex-1 bg-slate-50 border border-slate-200 input-mac rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-100 disabled:text-slate-400"
+              className="flex-1 bg-white border border-slate-300 rounded-xl p-3 text-[13px] min-h-[44px] focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow disabled:bg-slate-50 disabled:text-slate-400"
             />
           </div>
           {(!data.startDate || !data.endDate) && (
@@ -71,18 +71,18 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* Volume & Progress Card */}
-        <div className="bg-white border border-slate-200 rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center text-slate-700 mb-3">
-            <Target size={18} className="mr-2 text-slate-400" />
-            <span className="font-semibold">전체 작업 물량 요약</span>
+        {/* Total Volume Section */}
+        <div className="bg-white rounded-2xl p-6 border border-slate-200 shadow-md">
+          <div className="flex items-center text-slate-600 mb-4">
+            <Target size={18} className="mr-2" />
+            <h2 className="font-semibold text-[16px]">전체 작업 물량 요약</h2>
           </div>
           {mode === 'admin' ? (
             <textarea
               rows={3}
               value={data.totalVolume || ''}
               onChange={(e) => updateProjectInfo({ totalVolume: e.target.value })}
-              className="w-full bg-slate-50 border border-slate-200 input-mac text-slate-800 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[96px]"
+              className="w-full bg-white border border-slate-300 input-mac text-slate-800 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-900 focus:border-transparent transition-shadow min-h-[96px]"
               placeholder="예: 천장형 1way 650대, 벽걸이 110대 (총 761대)"
             />
           ) : (
@@ -105,22 +105,27 @@ export default function Dashboard() {
           </div>
         </div>
 
-        {/* Notice Card */}
-        <div className="bg-amber-50 border border-amber-200 rounded-2xl p-4 shadow-sm">
-          <div className="flex items-center text-amber-900 mb-2">
-            <FileText size={18} className="mr-2 text-amber-600" />
-            <span className="font-bold">공지사항</span>
+        {/* Notice Section */}
+        <div className="bg-slate-900 rounded-2xl p-6 border border-slate-800 shadow-md">
+          <div className="flex items-center text-slate-100 mb-4">
+            <FileText size={18} className="mr-2" />
+            <h2 className="font-semibold text-[16px]">공지사항</h2>
           </div>
+          
           {mode === 'admin' ? (
             <textarea
               value={data.notice || ''}
               onChange={(e) => updateProjectInfo({ notice: e.target.value })}
-              className="w-full bg-white/60 border border-amber-200 input-mac text-amber-900 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-amber-600 focus:border-transparent transition-shadow min-h-[96px]"
+              className="w-full bg-slate-800/80 border border-transparent input-mac text-slate-100 text-[13px] leading-relaxed rounded-xl p-4 focus:outline-none focus:ring-2 focus:ring-slate-400 transition-shadow min-h-[96px] placeholder:text-slate-500"
               placeholder="작업 전 주의사항을 입력하세요"
             />
           ) : (
-            <div className="w-full bg-white/40 text-amber-900 text-[13px] leading-relaxed rounded-xl p-4 min-h-[96px] whitespace-pre-wrap font-medium">
-              {data.notice || "등록된 공지사항이 없습니다."}
+            <div className="w-full bg-slate-800 rounded-xl p-4 min-h-[96px]">
+              {data.notice ? (
+                <p className="text-[13px] text-slate-200 leading-relaxed whitespace-pre-wrap">{data.notice}</p>
+              ) : (
+                <p className="text-[13px] text-slate-500 italic">등록된 공지사항이 없습니다.</p>
+              )}
             </div>
           )}
         </div>
