@@ -141,16 +141,28 @@ export const useProjectStore = create((set, get) => ({
       date: day.date || "",
       tasks: (tasksData || [])
         .filter(t => t.day_id === day.id)
-        .map(t => ({
-          id: t.id,
-          title: t.title || "",
-          scope: t.scope || "",
-          acType: t.ac_type || "",
-          acCount: t.ac_count || "",
-          completedCount: t.completed_count || "0",
-          status: t.status || "pending",
-          memo: t.memo || ""
-        }))
+        .map(t => {
+          // ac_type 필드에서 acItems 파싱 (기존 단일 문자열 형식과 하위 호환)
+          let acItems = [];
+          if (t.ac_type) {
+            const trimmed = t.ac_type.trim();
+            if (trimmed.startsWith('[')) {
+              try { acItems = JSON.parse(trimmed); } catch { acItems = [{ id: `legacy-${t.id}`, type: t.ac_type, count: t.ac_count || '0' }]; }
+            } else {
+              // 기존 단일 문자열 → 단일 항목 배열로 변환
+              acItems = [{ id: `legacy-${t.id}`, type: t.ac_type, count: t.ac_count || '0' }];
+            }
+          }
+          return {
+            id: t.id,
+            title: t.title || "",
+            scope: t.scope || "",
+            acItems,
+            completedCount: t.completed_count || "0",
+            status: t.status || "pending",
+            memo: t.memo || ""
+          };
+        })
     }));
 
     set({
@@ -214,8 +226,7 @@ export const useProjectStore = create((set, get) => ({
       id: `task-${Date.now()}`,
       title: "",
       scope: "",
-      acType: "",
-      acCount: "",
+      acItems: [],  // 에어컨 종류 및 수량 배열
       completedCount: "0",
       status: "pending",
       memo: ""
@@ -231,8 +242,8 @@ export const useProjectStore = create((set, get) => ({
       day_id: dayId,
       title: newTask.title,
       scope: newTask.scope,
-      ac_type: newTask.acType,
-      ac_count: newTask.acCount,
+      ac_type: JSON.stringify([]),  // 빈 배열을 JSON 문자열로 저장
+      ac_count: "0",
       completed_count: newTask.completedCount,
       status: newTask.status,
       memo: newTask.memo,
@@ -259,8 +270,12 @@ export const useProjectStore = create((set, get) => ({
     const dbPayload = {};
     if (updates.title !== undefined) dbPayload.title = updates.title;
     if (updates.scope !== undefined) dbPayload.scope = updates.scope;
-    if (updates.acType !== undefined) dbPayload.ac_type = updates.acType;
-    if (updates.acCount !== undefined) dbPayload.ac_count = updates.acCount;
+    if (updates.acItems !== undefined) {
+      // acItems 배열을 JSON 문자열로 직렬화하여 ac_type 컬럼에 저장 (스키마 변경 불필요)
+      dbPayload.ac_type = JSON.stringify(updates.acItems);
+      // 총 수량을 ac_count에 참조용으로 저장
+      dbPayload.ac_count = String(updates.acItems.reduce((sum, item) => sum + (Number(item.count) || 0), 0));
+    }
     if (updates.completedCount !== undefined) dbPayload.completed_count = updates.completedCount;
     if (updates.status !== undefined) dbPayload.status = updates.status;
     if (updates.memo !== undefined) dbPayload.memo = updates.memo;

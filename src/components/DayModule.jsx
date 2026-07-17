@@ -150,47 +150,98 @@ export default function DayModule({ activeDayId }) {
                 )}
               </div>
 
-              {/* 에어컨 종류 및 수량 */}
+              {/* 에어컨 종류 및 수량 (다중 항목) */}
               <div className="flex flex-col space-y-1.5">
                 <div className="flex items-center mb-1">
                   <Target size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>에어컨 종류 및 수량</label>
                 </div>
                 {mode === 'admin' ? (
-                  <div className="flex space-x-2">
-                    <select
-                      value={task.acType || ''}
-                      onChange={(e) => updateTask(day.id, task.id, { acType: e.target.value })}
-                      className="flex-1 px-4 py-3 text-[15px] min-h-[44px] focus:outline-none transition-all appearance-none"
-                      style={inputStyle}
+                  <div className="space-y-2">
+                    {(task.acItems || []).map((item) => (
+                      <div key={item.id} className="flex space-x-2">
+                        <select
+                          value={item.type || ''}
+                          onChange={(e) => {
+                            const newItems = (task.acItems || []).map(it =>
+                              it.id === item.id ? { ...it, type: e.target.value } : it
+                            );
+                            updateTask(day.id, task.id, { acItems: newItems });
+                          }}
+                          className="flex-1 px-4 py-3 text-[15px] min-h-[44px] focus:outline-none transition-all appearance-none"
+                          style={inputStyle}
+                        >
+                          <option value="">선택</option>
+                          <option value="벽걸이">벽걸이</option>
+                          <option value="천장형 1way(EHP)">천장형 1way(EHP)</option>
+                          <option value="천장형 1way(FCU)">천장형 1way(FCU)</option>
+                          <option value="천장형 4way(EHP)">천장형 4way(EHP)</option>
+                          <option value="천장형 4way(FCU)">천장형 4way(FCU)</option>
+                          <option value="스탠드">스탠드</option>
+                        </select>
+                        <div
+                          className="flex items-center w-24 rounded-xl overflow-hidden min-h-[44px]"
+                          style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
+                        >
+                          <input
+                            type="number"
+                            value={item.count || ''}
+                            onChange={(e) => {
+                              const newItems = (task.acItems || []).map(it =>
+                                it.id === item.id ? { ...it, count: e.target.value } : it
+                              );
+                              updateTask(day.id, task.id, { acItems: newItems });
+                            }}
+                            placeholder="0"
+                            className="w-full bg-transparent p-3 text-[15px] font-medium focus:outline-none text-center"
+                            style={{ color: vc.textMain }}
+                          />
+                        </div>
+                        <button
+                          onClick={() => {
+                            const newItems = (task.acItems || []).filter(it => it.id !== item.id);
+                            updateTask(day.id, task.id, { acItems: newItems });
+                          }}
+                          className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-xl transition-colors"
+                          style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}`, color: vc.textDim }}
+                          onMouseEnter={e => (e.currentTarget.style.color = vc.red)}
+                          onMouseLeave={e => (e.currentTarget.style.color = vc.textDim)}
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
+                    ))}
+                    <button
+                      onClick={() => {
+                        const newItems = [...(task.acItems || []), { id: `ac-${Date.now()}`, type: '', count: '' }];
+                        updateTask(day.id, task.id, { acItems: newItems });
+                      }}
+                      className="w-full py-2.5 rounded-xl text-[13px] font-medium flex items-center justify-center transition-all min-h-[44px]"
+                      style={{ backgroundColor: vc.bg, color: vc.textDim, border: `1.5px dashed ${vc.border}` }}
+                      onMouseEnter={e => { e.currentTarget.style.borderColor = vc.accent; e.currentTarget.style.color = vc.accent; }}
+                      onMouseLeave={e => { e.currentTarget.style.borderColor = vc.border; e.currentTarget.style.color = vc.textDim; }}
                     >
-                      <option value="">선택</option>
-                      <option value="벽걸이">벽걸이</option>
-                      <option value="천장형 1way(EHP)">천장형 1way(EHP)</option>
-                      <option value="천장형 1way(FCU)">천장형 1way(FCU)</option>
-                      <option value="천장형 4way(EHP)">천장형 4way(EHP)</option>
-                      <option value="천장형 4way(FCU)">천장형 4way(FCU)</option>
-                      <option value="스탠드">스탠드</option>
-                    </select>
-                    <div
-                      className="flex items-center w-24 rounded-xl overflow-hidden min-h-[44px]"
-                      style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
-                    >
-                      <input
-                        type="number"
-                        value={task.acCount || ''}
-                        onChange={(e) => updateTask(day.id, task.id, { acCount: e.target.value })}
-                        placeholder="0"
-                        className="w-full bg-transparent p-3 text-[15px] font-medium focus:outline-none text-center"
-                        style={{ color: vc.textMain }}
-                      />
-                    </div>
+                      <Plus size={16} className="mr-1.5" />
+                      에어컨 종류 추가
+                    </button>
                   </div>
                 ) : (
-                  <div className="px-4 py-3 min-h-[44px] flex items-center rounded-xl" style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}>
-                    <p className="font-medium text-[15px]" style={{ color: task.acType ? vc.textMain : vc.textDim }}>
-                      {task.acType ? `${task.acType} ${task.acCount}대` : '-'}
-                    </p>
+                  <div
+                    className="px-4 py-3 rounded-xl"
+                    style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
+                  >
+                    {(task.acItems || []).length === 0 ? (
+                      <p className="font-medium text-[15px]" style={{ color: vc.textDim }}>-</p>
+                    ) : (
+                      <div className="space-y-1.5">
+                        {(task.acItems || []).map((item) => (
+                          <div key={item.id} className="flex justify-between items-center min-h-[28px]">
+                            <span className="font-medium text-[15px]" style={{ color: vc.textMain }}>{item.type || '-'}</span>
+                            <span className="font-bold text-[15px]" style={{ color: vc.textMain }}>{item.count || 0}대</span>
+                          </div>
+                        ))}
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
@@ -228,7 +279,7 @@ export default function DayModule({ activeDayId }) {
                     <span className="text-[10px] font-bold mb-1" style={{ color: vc.textDim }}>잔여 수량</span>
                     <div className="flex items-center">
                       <div className="w-full text-[20px] font-bold min-h-[32px] flex items-center" style={{ color: vc.textMain }}>
-                        {Math.max(0, (Number(task.acCount) || 0) - (Number(task.completedCount) || 0))}
+                        {Math.max(0, (task.acItems || []).reduce((sum, item) => sum + (Number(item.count) || 0), 0) - (Number(task.completedCount) || 0))}
                       </div>
                       <span className="text-[15px] font-medium" style={{ color: vc.textSec }}>대</span>
                     </div>
