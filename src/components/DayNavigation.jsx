@@ -53,12 +53,12 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
 
   return (
     <div
-      className="sticky z-30"
+      className="sticky z-30 mt-5 mx-4 rounded-2xl overflow-hidden"
       style={{
-        top: '68px',
+        top: 0,
         backgroundColor: vc.bg,
-        borderBottom: `1px solid ${vc.border}`,
-        boxShadow: '0 1px 4px rgba(0,0,0,0.04)',
+        border: `1px solid ${vc.border}`,
+        boxShadow: '0 1px 4px rgba(0,0,0,0.06), 0 4px 12px rgba(0,0,0,0.04)',
       }}
     >
       <div className="flex items-center px-2 py-2">

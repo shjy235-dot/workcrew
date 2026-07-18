@@ -5,10 +5,12 @@ import Dashboard from './components/Dashboard';
 import DayNavigation from './components/DayNavigation';
 import DayModule from './components/DayModule';
 import WorkerAuthModal from './components/WorkerAuthModal';
+import TabBar from './components/TabBar';
 
 function App() {
   const { data, mode, workerName, initDB } = useProjectStore();
   const [activeDayId, setActiveDayId] = useState('');
+  const [activeView, setActiveView] = useState('dashboard');
 
   useEffect(() => {
     initDB();
@@ -30,10 +32,16 @@ function App() {
         {mode === 'worker' && !workerName && <WorkerAuthModal />}
         <TopBar />
         <main className="flex-1 overflow-y-auto hide-scrollbar relative">
-          <Dashboard />
-          <DayNavigation activeDayId={activeDayId} setActiveDayId={setActiveDayId} />
-          <DayModule activeDayId={activeDayId} />
+          {activeView === 'dashboard' ? (
+            <Dashboard />
+          ) : (
+            <>
+              <DayNavigation activeDayId={activeDayId} setActiveDayId={setActiveDayId} />
+              <DayModule activeDayId={activeDayId} />
+            </>
+          )}
         </main>
+        <TabBar activeView={activeView} setActiveView={setActiveView} />
       </div>
     </div>
   );

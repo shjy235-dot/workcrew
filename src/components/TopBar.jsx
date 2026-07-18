@@ -48,22 +48,21 @@ export default function TopBar() {
       className="p-4 flex items-center sticky top-0 z-40 backdrop-blur-md"
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.92)',
-        borderBottom: `1px solid ${vc.border}`,
       }}
     >
       <div className="flex-1 flex items-center justify-center space-x-3 min-w-0">
-        <img src={logo} alt="누리종합환경" className="h-auto max-h-14 w-auto max-w-full object-contain" />
+        <img src={logo} alt="누리종합환경" className="h-auto max-h-14 w-auto max-w-full min-w-0 object-contain" />
         {mode === 'worker' && workerName && (
           <span
-            className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium whitespace-nowrap"
+            className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium min-w-0 shrink"
             style={{
               backgroundColor: vc.surface,
               color: vc.textSec,
               border: `1px solid ${vc.border}`,
             }}
           >
-            <User size={12} className="mr-1" />
-            {workerName}
+            <User size={12} className="mr-1 shrink-0" />
+            <span className="truncate">{workerName}</span>
           </span>
         )}
       </div>

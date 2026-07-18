@@ -1,6 +1,14 @@
 import React, { useState } from 'react';
-import { Calendar, AlertTriangle, FileText, Target, FolderOpen, Trash2 } from 'lucide-react';
+import { Calendar, AlertTriangle, FileText, Target, FolderOpen, Trash2, Building2 } from 'lucide-react';
 import { useProjectStore } from '../store/projectStore';
+
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const getWeekday = (dateStr) => (dateStr ? WEEKDAYS[new Date(dateStr).getDay()] : '');
+const formatDateShort = (dateStr) => {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  return `${y.slice(2)}/${m}/${d}`;
+};
 
 // Vercel 모노크롬 토큰 (60-30-10 법칙)
 const vc = {
@@ -84,20 +92,32 @@ export default function Dashboard() {
   return (
     <div className="p-4 pb-6" style={{ backgroundColor: vc.surface, borderBottom: `1px solid ${vc.border}` }}>
       {/* 프로젝트명 */}
-      <div className="mb-6 px-2">
+      <div className="mb-6 px-2 flex flex-col items-center">
+        <div
+          className="flex items-center mb-3 px-4 py-1.5 rounded-full"
+          style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
+        >
+          <Building2 size={14} className="mr-1.5" style={{ color: vc.textDim }} />
+          <span className="text-[12px] font-bold tracking-wider uppercase" style={{ color: vc.textDim }}>
+            진행 프로젝트
+          </span>
+        </div>
         {mode === 'admin' ? (
           <input
             type="text"
             value={data.projectName}
             onChange={(e) => updateProjectInfo({ projectName: e.target.value })}
-            className="w-full text-[25px] font-bold text-center border-b-2 border-transparent focus:outline-none pb-2 bg-transparent transition-colors min-h-[44px]"
-            style={{ color: vc.textMain, borderBottomColor: 'transparent' }}
+            className="w-full font-extrabold text-center tracking-tight border-b-2 border-transparent focus:outline-none pb-2 bg-transparent transition-colors min-h-[44px]"
+            style={{ color: vc.textMain, borderBottomColor: 'transparent', fontSize: 'clamp(18px, 6vw, 28px)' }}
             onFocus={e => (e.currentTarget.style.borderBottomColor = vc.accent)}
             onBlur={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
             placeholder="프로젝트명을 입력하세요"
           />
         ) : (
-          <h2 className="text-[25px] font-bold tracking-tight min-h-[44px] flex items-center justify-center" style={{ color: vc.textMain }}>
+          <h2
+            className="w-full font-extrabold tracking-tight min-h-[44px] flex items-center justify-center text-center break-words leading-tight"
+            style={{ color: vc.textMain, fontSize: 'clamp(18px, 6vw, 28px)' }}
+          >
             {data.projectName || '프로젝트 명칭 없음'}
           </h2>
         )}
@@ -105,33 +125,51 @@ export default function Dashboard() {
 
       <div className="space-y-4">
         {/* 기간 설정 카드 */}
-        <div className="p-6" style={cardStyle}>
-          <div className="flex items-center mb-4" style={{ color: vc.textSec }}>
-            <Calendar size={18} className="mr-2" />
-            <h2 className="font-semibold text-[16px]">기간 설정</h2>
+        <div className="p-4" style={cardStyle}>
+          <div className="flex items-center mb-3" style={{ color: vc.textSec }}>
+            <Calendar size={16} className="mr-2" />
+            <h2 className="font-semibold text-[14px]">기간 설정</h2>
           </div>
           <div className="flex items-center space-x-2">
-            <input
-              type="date"
-              value={data.startDate || ''}
-              onChange={(e) => updateProjectInfo({ startDate: e.target.value })}
-              disabled={mode === 'worker'}
-              className="flex-1 p-3 text-[15px] font-medium min-h-[44px] focus:outline-none transition-all disabled:opacity-40"
-              style={{ ...inputStyle, outline: 'none' }}
-              onFocus={e => (e.currentTarget.style.borderColor = vc.accent)}
-              onBlur={e => (e.currentTarget.style.borderColor = vc.border)}
-            />
-            <span className="font-bold" style={{ color: vc.textDim }}>-</span>
-            <input
-              type="date"
-              value={data.endDate || ''}
-              onChange={(e) => updateProjectInfo({ endDate: e.target.value })}
-              disabled={mode === 'worker'}
-              className="flex-1 p-3 text-[15px] font-medium min-h-[44px] focus:outline-none transition-all disabled:opacity-40"
-              style={{ ...inputStyle, outline: 'none' }}
-              onFocus={e => (e.currentTarget.style.borderColor = vc.accent)}
-              onBlur={e => (e.currentTarget.style.borderColor = vc.border)}
-            />
+            <div className="relative flex-1 min-w-0">
+              <input
+                type="date"
+                value={data.startDate || ''}
+                onChange={(e) => updateProjectInfo({ startDate: e.target.value })}
+                disabled={mode === 'worker'}
+                className="absolute inset-0 w-full h-full opacity-0 disabled:cursor-not-allowed"
+                style={{ cursor: mode === 'worker' ? 'not-allowed' : 'pointer' }}
+              />
+              <div
+                className="w-full p-3 text-[14px] font-semibold min-h-[44px] flex items-center justify-between pointer-events-none disabled:opacity-40"
+                style={{ ...inputStyle, opacity: mode === 'worker' ? 0.4 : 1 }}
+              >
+                <span className="truncate">
+                  {data.startDate ? `${formatDateShort(data.startDate)}(${getWeekday(data.startDate)})` : '날짜 선택'}
+                </span>
+                <Calendar size={14} className="ml-1 shrink-0" style={{ color: vc.textDim }} />
+              </div>
+            </div>
+            <span className="font-bold shrink-0" style={{ color: vc.textDim }}>-</span>
+            <div className="relative flex-1 min-w-0">
+              <input
+                type="date"
+                value={data.endDate || ''}
+                onChange={(e) => updateProjectInfo({ endDate: e.target.value })}
+                disabled={mode === 'worker'}
+                className="absolute inset-0 w-full h-full opacity-0 disabled:cursor-not-allowed"
+                style={{ cursor: mode === 'worker' ? 'not-allowed' : 'pointer' }}
+              />
+              <div
+                className="w-full p-3 text-[14px] font-semibold min-h-[44px] flex items-center justify-between pointer-events-none disabled:opacity-40"
+                style={{ ...inputStyle, opacity: mode === 'worker' ? 0.4 : 1 }}
+              >
+                <span className="truncate">
+                  {data.endDate ? `${formatDateShort(data.endDate)}(${getWeekday(data.endDate)})` : '날짜 선택'}
+                </span>
+                <Calendar size={14} className="ml-1 shrink-0" style={{ color: vc.textDim }} />
+              </div>
+            </div>
           </div>
           {(!data.startDate || !data.endDate) && (
             <p className="text-xs mt-2 flex items-center" style={{ color: vc.textDim }}>
@@ -141,27 +179,27 @@ export default function Dashboard() {
           )}
         </div>
 
-        {/* 전체 작업 물량 카드 */}
-        <div className="p-6" style={cardStyle}>
+        {/* 전체 작업 요약 카드 */}
+        <div className="p-7" style={cardStyle}>
           <div className="flex items-center mb-4" style={{ color: vc.textSec }}>
             <Target size={18} className="mr-2" />
-            <h2 className="font-semibold text-[16px]">전체 작업 물량 요약</h2>
+            <h2 className="font-semibold text-[16px]">전체 작업 요약</h2>
           </div>
           {mode === 'admin' ? (
             <textarea
-              rows={3}
+              rows={6}
               value={data.totalVolume || ''}
               onChange={(e) => updateProjectInfo({ totalVolume: e.target.value })}
-              className="w-full text-[15px] leading-relaxed p-4 focus:outline-none transition-all min-h-[96px] resize-none input-mac"
+              className="w-full text-[15px] leading-relaxed p-4 focus:outline-none transition-all min-h-[160px] resize-none input-mac"
               style={{ ...inputStyle }}
               placeholder="예: 천장형 1way 650대, 벽걸이 110대 (총 761대)"
             />
           ) : (
             <div
-              className="w-full text-[15px] leading-relaxed p-4 min-h-[96px] whitespace-pre-wrap rounded-xl"
+              className="w-full text-[15px] leading-relaxed p-4 min-h-[160px] whitespace-pre-wrap rounded-xl"
               style={{ ...inputStyle, color: data.totalVolume ? vc.textMain : vc.textDim }}
             >
-              {data.totalVolume || '등록된 전체 작업 물량 요약이 없습니다.'}
+              {data.totalVolume || '등록된 전체 작업 요약이 없습니다.'}
             </div>
           )}
           <div className="mt-5">
@@ -180,7 +218,7 @@ export default function Dashboard() {
 
         {/* 공지사항 카드 - Red Semantic 유지 */}
         <div
-          className="p-6"
+          className="p-4"
           style={{
             backgroundColor: vc.redBg,
             border: `1px solid ${vc.redBorder}`,
@@ -188,15 +226,16 @@ export default function Dashboard() {
             boxShadow: '0 1px 4px rgba(220,38,38,0.05)',
           }}
         >
-          <div className="flex items-center mb-4" style={{ color: vc.red }}>
-            <FileText size={18} className="mr-2" />
-            <h2 className="font-semibold text-[16px]">공지사항</h2>
+          <div className="flex items-center mb-3" style={{ color: vc.red }}>
+            <FileText size={16} className="mr-2" />
+            <h2 className="font-semibold text-[14px]">공지사항</h2>
           </div>
           {mode === 'admin' ? (
             <textarea
+              rows={2}
               value={data.notice || ''}
               onChange={(e) => updateProjectInfo({ notice: e.target.value })}
-              className="w-full text-[15px] leading-relaxed p-4 focus:outline-none transition-all min-h-[96px] resize-none"
+              className="w-full text-[15px] leading-relaxed p-4 focus:outline-none transition-all min-h-[64px] resize-none"
               style={{
                 backgroundColor: '#ffffff',
                 border: `1px solid ${vc.redBorder}`,
@@ -207,7 +246,7 @@ export default function Dashboard() {
             />
           ) : (
             <div
-              className="w-full p-4 min-h-[96px] rounded-xl"
+              className="w-full p-4 min-h-[64px] rounded-xl"
               style={{ backgroundColor: '#ffffff', border: `1px solid ${vc.redBorder}` }}
             >
               {data.notice ? (

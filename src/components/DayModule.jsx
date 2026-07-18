@@ -19,6 +19,14 @@ const vc = {
   amber: '#D97706',
 };
 
+const WEEKDAYS = ['일', '월', '화', '수', '목', '금', '토'];
+const getWeekday = (dateStr) => (dateStr ? WEEKDAYS[new Date(dateStr).getDay()] : '');
+const formatDateShort = (dateStr) => {
+  if (!dateStr) return '';
+  const [y, m, d] = dateStr.split('-');
+  return `${y.slice(2)}/${m}/${d}`;
+};
+
 export default function DayModule({ activeDayId }) {
   const { data, mode, workerName, addTask, updateTask, removeTask, updateDay } = useProjectStore();
   const day = data.days.find((d) => d.id === activeDayId);
@@ -71,16 +79,18 @@ export default function DayModule({ activeDayId }) {
       {mode === 'admin' && (
         <div className="flex space-x-2 mb-4">
           <div
-            className="flex-1 flex items-center px-3 py-2 rounded-xl min-h-[44px]"
+            className="relative flex-1 min-w-0 flex items-center px-3 py-2 rounded-xl min-h-[44px]"
             style={{ backgroundColor: vc.bg, border: `1px solid ${vc.border}` }}
           >
             <Calendar size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
+            <span className="truncate text-[14px] font-medium" style={{ color: day.date ? vc.textMain : vc.textDim }}>
+              {day.date ? `${formatDateShort(day.date)}(${getWeekday(day.date)})` : '날짜 선택'}
+            </span>
             <input
               type="date"
               value={day.date || ''}
               onChange={(e) => updateDay(day.id, { date: e.target.value })}
-              className="w-full bg-transparent text-[14px] font-medium focus:outline-none"
-              style={{ color: vc.textMain }}
+              className="absolute inset-0 w-full h-full opacity-0 cursor-pointer"
             />
           </div>
           <div
@@ -156,7 +166,7 @@ export default function DayModule({ activeDayId }) {
               )}
             </div>
 
-            <div className="p-5 space-y-6">
+            <div className="p-5 space-y-5">
               {/* 작업 범위 */}
               <div className="flex flex-col space-y-1.5">
                 <div className="flex items-center mb-1">
@@ -320,8 +330,8 @@ export default function DayModule({ activeDayId }) {
               </div>
 
               {/* 진행 상태 */}
-              <div className="pt-5" style={{ borderTop: `1px solid ${vc.border}` }}>
-                <div className="flex items-center mb-4">
+              <div className="pt-4" style={{ borderTop: `1px solid ${vc.border}` }}>
+                <div className="flex items-center mb-3">
                   <Wrench size={16} className="mr-2" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>진행 상태 (Status)</label>
                 </div>
@@ -356,8 +366,8 @@ export default function DayModule({ activeDayId }) {
               </div>
 
               {/* 현장 메모 */}
-              <div className="pt-5" style={{ borderTop: `1px solid ${vc.border}` }}>
-                <div className="flex items-center mb-4">
+              <div className="pt-4" style={{ borderTop: `1px solid ${vc.border}` }}>
+                <div className="flex items-center mb-3">
                   <MessageSquare size={16} className="mr-2" style={{ color: vc.textDim }} />
                   <label style={labelStyle}>현장 메모 / 특이사항</label>
                 </div>
