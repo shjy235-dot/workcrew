@@ -59,14 +59,14 @@ export default function Dashboard() {
             type="text"
             value={data.projectName}
             onChange={(e) => updateProjectInfo({ projectName: e.target.value })}
-            className="w-full text-[25px] font-bold border-b-2 border-transparent focus:outline-none pb-2 bg-transparent transition-colors min-h-[44px]"
+            className="w-full text-[25px] font-bold text-center border-b-2 border-transparent focus:outline-none pb-2 bg-transparent transition-colors min-h-[44px]"
             style={{ color: vc.textMain, borderBottomColor: 'transparent' }}
             onFocus={e => (e.currentTarget.style.borderBottomColor = vc.accent)}
             onBlur={e => (e.currentTarget.style.borderBottomColor = 'transparent')}
             placeholder="프로젝트명을 입력하세요"
           />
         ) : (
-          <h2 className="text-[25px] font-bold tracking-tight min-h-[44px] flex items-center" style={{ color: vc.textMain }}>
+          <h2 className="text-[25px] font-bold tracking-tight min-h-[44px] flex items-center justify-center" style={{ color: vc.textMain }}>
             {data.projectName || '프로젝트 명칭 없음'}
           </h2>
         )}

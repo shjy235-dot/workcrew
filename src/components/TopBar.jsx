@@ -44,13 +44,13 @@ export default function TopBar() {
 
   return (
     <div
-      className="p-4 flex items-center justify-between sticky top-0 z-40 backdrop-blur-md"
+      className="p-4 relative flex items-center justify-end sticky top-0 z-40 backdrop-blur-md"
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.92)',
         borderBottom: `1px solid ${vc.border}`,
       }}
     >
-      <div className="flex items-center space-x-3">
+      <div className="absolute left-1/2 -translate-x-1/2 flex items-center space-x-3">
         <h1 className="text-[20px] font-bold tracking-tight" style={{ color: vc.textMain }}>
           누리종합환경
         </h1>
