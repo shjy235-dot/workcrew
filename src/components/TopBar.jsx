@@ -12,7 +12,7 @@ const vc = {
   textMain: '#000000',
   textSec: '#6B7280',
   textDim: '#9CA3AF',
-  accent: '#000000',    // 10% 강조 = 순수 블랙
+  accent: '#1F2937',    // 10% 강조 = 진한 그레이 (gray-800)
 };
 
 export default function TopBar() {
@@ -81,7 +81,7 @@ export default function TopBar() {
           className="flex items-center space-x-1 min-h-[44px] px-3 py-2 rounded-lg transition-all btn-mac min-w-0"
           style={{
             backgroundColor: vc.bg,
-            color: copied ? '#000000' : vc.textSec,
+            color: copied ? vc.accent : vc.textSec,
             border: `1px solid ${vc.border}`,
           }}
           onMouseEnter={e => (e.currentTarget.style.backgroundColor = vc.surface)}
@@ -97,9 +97,9 @@ export default function TopBar() {
           style={
             mode === 'admin'
               ? {
-                  backgroundColor: '#000000',
+                  backgroundColor: vc.accent,
                   color: '#ffffff',
-                  border: '1px solid #000000',
+                  border: `1px solid ${vc.accent}`,
                 }
               : {
                   backgroundColor: vc.bg,

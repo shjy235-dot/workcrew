@@ -11,7 +11,7 @@ const vc = {
   textMain: '#000000',
   textSec: '#6B7280',
   textDim: '#9CA3AF',
-  accent: '#000000',   // 10% - 순수 블랙 강조
+  accent: '#1F2937',   // 10% - 진한 그레이 강조 (gray-800)
   red: '#DC2626',
   // Semantic colors (접근성 유지)
   blue: '#2563EB',

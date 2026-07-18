@@ -19,7 +19,7 @@ const vc = {
   textMain: '#000000', // 주 텍스트
   textSec: '#6B7280',  // 보조 텍스트
   textDim: '#9CA3AF',  // 비활성 텍스트
-  accent: '#000000',   // 10% 강조색 - 순수 블랙
+  accent: '#1F2937',   // 10% 강조색 - 진한 그레이 (gray-800)
   // 공지사항 레드 포인트 유지 (semantic color)
   red: '#DC2626',
   redBg: '#FEF2F2',

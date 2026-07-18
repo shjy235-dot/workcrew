@@ -10,7 +10,7 @@ const vc = {
   textMain: '#000000',
   textSec: '#6B7280',
   textDim: '#9CA3AF',
-  accent: '#000000',
+  accent: '#1F2937',
   red: '#DC2626',
 };
 

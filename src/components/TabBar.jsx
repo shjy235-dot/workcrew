@@ -5,7 +5,7 @@ const vc = {
   bg: '#ffffff',
   border: '#E5E7EB',
   textDim: '#9CA3AF',
-  accent: '#000000',
+  accent: '#1F2937',
 };
 
 const tabs = [
