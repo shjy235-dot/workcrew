@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Share2, UserCog, User, Check } from 'lucide-react';
 import { useProjectStore } from '../store/projectStore';
+import logo from '../assets/logo.png';
 
 // Vercel 모노크롬 토큰
 const vc = {
@@ -51,9 +52,7 @@ export default function TopBar() {
       }}
     >
       <div className="flex-1 flex items-center justify-center space-x-3 min-w-0">
-        <h1 className="text-[22px] font-bold tracking-tight whitespace-nowrap" style={{ color: vc.textMain }}>
-          누리종합환경
-        </h1>
+        <img src={logo} alt="누리종합환경" className="h-[28px] w-auto" />
         {mode === 'worker' && workerName && (
           <span
             className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium whitespace-nowrap"
