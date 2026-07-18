@@ -16,8 +16,15 @@ const vc = {
 };
 
 export default function TopBar() {
-  const { mode, setMode, getShareUrl, workerName } = useProjectStore();
+  const { mode, setMode, getShareUrl, workerName, setWorkerName } = useProjectStore();
   const [copied, setCopied] = useState(false);
+
+  const handleRenameWorker = () => {
+    const newName = window.prompt('이름을 수정해주세요:', workerName);
+    if (newName && newName.trim()) {
+      setWorkerName(newName.trim());
+    }
+  };
 
   const handleShare = async () => {
     const url = getShareUrl();
@@ -53,8 +60,9 @@ export default function TopBar() {
       <div className="flex-1 flex items-center justify-center space-x-3 min-w-0">
         <img src={logo} alt="누리종합환경" className="h-auto max-h-14 w-auto max-w-full min-w-0 object-contain" />
         {mode === 'worker' && workerName && (
-          <span
-            className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium min-w-0 shrink"
+          <button
+            onClick={handleRenameWorker}
+            className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium shrink-0 transition-colors"
             style={{
               backgroundColor: vc.surface,
               color: vc.textSec,
@@ -63,14 +71,14 @@ export default function TopBar() {
           >
             <User size={12} className="mr-1 shrink-0" />
             <span className="truncate">{workerName}</span>
-          </span>
+          </button>
         )}
       </div>
 
-      <div className="flex items-center justify-end space-x-2 shrink-0">
+      <div className="flex items-center justify-end space-x-2 min-w-0">
         <button
           onClick={handleShare}
-          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg transition-all btn-mac shrink-0 whitespace-nowrap"
+          className="flex items-center space-x-1 min-h-[44px] px-3 py-2 rounded-lg transition-all btn-mac min-w-0"
           style={{
             backgroundColor: vc.bg,
             color: copied ? '#000000' : vc.textSec,
@@ -79,13 +87,13 @@ export default function TopBar() {
           onMouseEnter={e => (e.currentTarget.style.backgroundColor = vc.surface)}
           onMouseLeave={e => (e.currentTarget.style.backgroundColor = vc.bg)}
         >
-          {copied ? <Check size={18} /> : <Share2 size={18} />}
-          <span className="text-[13px] font-medium whitespace-nowrap">{copied ? '복사됨' : '공유'}</span>
+          {copied ? <Check size={18} className="shrink-0" /> : <Share2 size={18} className="shrink-0" />}
+          <span className="text-[13px] font-medium truncate">{copied ? '복사됨' : '공유'}</span>
         </button>
 
         <button
           onClick={toggleMode}
-          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all btn-mac shrink-0 whitespace-nowrap"
+          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all btn-mac shrink-0"
           style={
             mode === 'admin'
               ? {

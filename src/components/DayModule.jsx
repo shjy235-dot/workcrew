@@ -43,7 +43,7 @@ export default function DayModule({ activeDayId }) {
     if (!text) return;
     const task = day.tasks.find((t) => t.id === taskId);
     const timestamp = new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit' });
-    const namePrefix = workerName ? `[${workerName}] ` : mode === 'admin' ? '[관리자] ' : '[작업자] ';
+    const namePrefix = mode === 'admin' ? '[관리자] ' : workerName ? `[${workerName}] ` : '[작업자] ';
     const newMemoLine = `${namePrefix}${text} - ${timestamp}`;
     const updatedMemo = task.memo ? `${task.memo}\n${newMemoLine}` : newMemoLine;
     updateTask(day.id, taskId, { memo: updatedMemo });
@@ -134,7 +134,7 @@ export default function DayModule({ activeDayId }) {
           <div key={task.id} style={cardStyle}>
             {/* 헤더 */}
             <div
-              className="px-5 py-3.5 flex justify-between items-center"
+              className="px-5 py-2 flex justify-between items-center"
               style={{ borderBottom: `1px solid ${vc.border}`, backgroundColor: vc.surface }}
             >
               {mode === 'admin' ? (
@@ -142,13 +142,13 @@ export default function DayModule({ activeDayId }) {
                   type="text"
                   value={task.title || ''}
                   onChange={(e) => updateTask(day.id, task.id, { title: e.target.value })}
-                  placeholder={`작업 #${index + 1}`}
+                  placeholder={`#${index + 1} 작업`}
                   className="font-bold text-[18px] tracking-tight bg-transparent border-none focus:outline-none w-full"
                   style={{ color: vc.textMain }}
                 />
               ) : (
                 <h3 className="font-bold text-[18px] tracking-tight" style={{ color: vc.textMain }}>
-                  {task.title || `작업 #${index + 1}`}
+                  {task.title || `#${index + 1} 작업`}
                 </h3>
               )}
               {mode === 'admin' && (
@@ -380,7 +380,7 @@ export default function DayModule({ activeDayId }) {
                       .map((line, lineIndex) => (
                         <div
                           key={lineIndex}
-                          className="flex justify-between items-start p-4 rounded-xl"
+                          className="flex justify-between items-center p-2.5 rounded-xl"
                           style={{ backgroundColor: '#FFFBEB', border: '1px solid #FDE68A' }}
                         >
                           <div className="text-[13px] whitespace-pre-wrap leading-relaxed flex-1" style={{ color: '#92400E' }}>
