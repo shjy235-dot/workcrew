@@ -52,7 +52,7 @@ export default function TopBar() {
       }}
     >
       <div className="flex-1 flex items-center justify-center space-x-3 min-w-0">
-        <img src={logo} alt="누리종합환경" className="h-[28px] w-auto" />
+        <img src={logo} alt="누리종합환경" className="h-10 w-auto max-w-full" />
         {mode === 'worker' && workerName && (
           <span
             className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium whitespace-nowrap"
