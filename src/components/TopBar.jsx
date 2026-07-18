@@ -44,21 +44,19 @@ export default function TopBar() {
 
   return (
     <div
-      className="p-4 grid grid-cols-[1fr_auto_1fr] items-center sticky top-0 z-40 backdrop-blur-md"
+      className="p-4 flex items-center sticky top-0 z-40 backdrop-blur-md"
       style={{
         backgroundColor: 'rgba(255, 255, 255, 0.92)',
         borderBottom: `1px solid ${vc.border}`,
       }}
     >
-      <div />
-
-      <div className="flex items-center justify-center space-x-3">
-        <h1 className="text-[20px] font-bold tracking-tight whitespace-nowrap" style={{ color: vc.textMain }}>
+      <div className="flex-1 flex items-center justify-center space-x-3 min-w-0">
+        <h1 className="text-[22px] font-bold tracking-tight whitespace-nowrap" style={{ color: vc.textMain }}>
           누리종합환경
         </h1>
         {mode === 'worker' && workerName && (
           <span
-            className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium"
+            className="text-[10px] px-2 py-1 rounded-full flex items-center font-medium whitespace-nowrap"
             style={{
               backgroundColor: vc.surface,
               color: vc.textSec,
@@ -71,10 +69,10 @@ export default function TopBar() {
         )}
       </div>
 
-      <div className="flex items-center justify-end space-x-2">
+      <div className="flex items-center justify-end space-x-2 shrink-0">
         <button
           onClick={handleShare}
-          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg transition-all btn-mac"
+          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg transition-all btn-mac shrink-0 whitespace-nowrap"
           style={{
             backgroundColor: vc.bg,
             color: copied ? '#000000' : vc.textSec,
@@ -84,12 +82,12 @@ export default function TopBar() {
           onMouseLeave={e => (e.currentTarget.style.backgroundColor = vc.bg)}
         >
           {copied ? <Check size={18} /> : <Share2 size={18} />}
-          <span className="text-[13px] font-medium">{copied ? '복사됨' : '공유'}</span>
+          <span className="text-[13px] font-medium whitespace-nowrap">{copied ? '복사됨' : '공유'}</span>
         </button>
 
         <button
           onClick={toggleMode}
-          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all btn-mac"
+          className="flex items-center space-x-1 min-h-[44px] px-4 py-2 rounded-lg font-medium transition-all btn-mac shrink-0 whitespace-nowrap"
           style={
             mode === 'admin'
               ? {
@@ -105,7 +103,7 @@ export default function TopBar() {
           }
         >
           <UserCog size={18} />
-          <span className="text-[13px]">{mode === 'admin' ? '관리자' : '작업자'}</span>
+          <span className="text-[13px] whitespace-nowrap">{mode === 'admin' ? '관리자' : '작업자'}</span>
         </button>
       </div>
     </div>
