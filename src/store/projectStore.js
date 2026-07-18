@@ -57,6 +57,7 @@ export const useProjectStore = create((set, get) => ({
   isInitialized: false,
   lastUpdateTime: 0,
   fetchTimer: null,
+  activeProjectId: null,
 
   setMode: (mode) => {
     localStorage.setItem('workcrew-mode', mode);
@@ -71,24 +72,27 @@ export const useProjectStore = create((set, get) => ({
   initDB: async () => {
     if (get().isInitialized) return;
 
-    const { data: projectInfo } = await supabase.from('project_info').select('*').eq('id', 1).single();
-    
+    const { data: projectInfo } = await supabase.from('project_info').select('*').eq('status', 'active').limit(1).maybeSingle();
+
     if (!projectInfo) {
       await supabase.from('project_info').insert({
-        id: 1,
+        id: '1',
         project_name: initialMockData.projectName,
         start_date: initialMockData.startDate,
         end_date: initialMockData.endDate,
         notice: initialMockData.notice,
-        total_volume: initialMockData.totalVolume
+        total_volume: initialMockData.totalVolume,
+        status: 'active'
       });
 
       for (let i = 0; i < initialMockData.days.length; i++) {
         const day = initialMockData.days[i];
         await supabase.from('days').insert({
           id: day.id,
+          project_id: '1',
           title: day.title,
           date: day.date,
+          site: '',
           order_index: i
         });
 
@@ -136,18 +140,19 @@ export const useProjectStore = create((set, get) => ({
   },
 
   fetchFromDB: async () => {
-    const [ { data: projectInfo }, { data: daysData }, { data: tasksData } ] = await Promise.all([
-      supabase.from('project_info').select('*').eq('id', 1).single(),
-      supabase.from('days').select('*').order('order_index', { ascending: true }),
+    const { data: projectInfo } = await supabase.from('project_info').select('*').eq('status', 'active').limit(1).maybeSingle();
+    if (!projectInfo) return;
+
+    const [ { data: daysData }, { data: tasksData } ] = await Promise.all([
+      supabase.from('days').select('*').eq('project_id', projectInfo.id).order('order_index', { ascending: true }),
       supabase.from('tasks').select('*').order('order_index', { ascending: true })
     ]);
-
-    if (!projectInfo) return;
 
     const days = (daysData || []).map(day => ({
       id: day.id,
       title: day.title,
       date: day.date || "",
+      site: day.site || "",
       tasks: (tasksData || [])
         .filter(t => t.day_id === day.id)
         .map(t => {
@@ -175,6 +180,7 @@ export const useProjectStore = create((set, get) => ({
     }));
 
     set({
+      activeProjectId: projectInfo.id,
       data: {
         projectName: projectInfo.project_name || "",
         startDate: projectInfo.start_date || "",
@@ -188,16 +194,16 @@ export const useProjectStore = create((set, get) => ({
 
   updateProjectInfo: async (info) => {
     set((state) => ({ data: { ...state.data, ...info }, lastUpdateTime: Date.now() }));
-    
+
     const dbPayload = {};
     if (info.projectName !== undefined) dbPayload.project_name = info.projectName;
     if (info.startDate !== undefined) dbPayload.start_date = info.startDate;
     if (info.endDate !== undefined) dbPayload.end_date = info.endDate;
     if (info.notice !== undefined) dbPayload.notice = info.notice;
     if (info.totalVolume !== undefined) dbPayload.total_volume = info.totalVolume;
-    
-    if (Object.keys(dbPayload).length > 0) {
-      await supabase.from('project_info').update(dbPayload).eq('id', 1);
+
+    if (Object.keys(dbPayload).length > 0 && get().activeProjectId) {
+      await supabase.from('project_info').update(dbPayload).eq('id', get().activeProjectId);
     }
   },
 
@@ -208,17 +214,81 @@ export const useProjectStore = create((set, get) => ({
       id: newDayId,
       title: `${newDayNumber}일차 작업`,
       date: '',
+      site: '',
       tasks: []
     };
-    
+
     set((state) => ({ data: { ...state.data, days: [...state.data.days, newDay] }, lastUpdateTime: Date.now() }));
-    
+
     await supabase.from('days').insert({
       id: newDay.id,
+      project_id: get().activeProjectId,
       title: newDay.title,
       date: newDay.date,
+      site: newDay.site,
       order_index: newDayNumber - 1
     });
+  },
+
+  updateDay: async (dayId, updates) => {
+    set((state) => ({
+      data: {
+        ...state.data,
+        days: state.data.days.map(day => day.id === dayId ? { ...day, ...updates } : day)
+      },
+      lastUpdateTime: Date.now()
+    }));
+
+    const dbPayload = {};
+    if (updates.title !== undefined) dbPayload.title = updates.title;
+    if (updates.date !== undefined) dbPayload.date = updates.date;
+    if (updates.site !== undefined) dbPayload.site = updates.site;
+
+    if (Object.keys(dbPayload).length > 0) {
+      await supabase.from('days').update(dbPayload).eq('id', dayId);
+    }
+  },
+
+  listProjects: async () => {
+    const { data } = await supabase.from('project_info').select('*').order('created_at', { ascending: false });
+    return data || [];
+  },
+
+  startNewProject: async (name) => {
+    const state = get();
+    if (state.activeProjectId) {
+      await supabase.from('project_info').update({ status: 'archived' }).eq('id', state.activeProjectId);
+    }
+    const newId = `project-${Date.now()}`;
+    await supabase.from('project_info').insert({
+      id: newId,
+      project_name: name || '새 프로젝트',
+      start_date: '',
+      end_date: '',
+      notice: '',
+      total_volume: '',
+      status: 'active'
+    });
+    await get().fetchFromDB();
+  },
+
+  loadProject: async (projectId) => {
+    const state = get();
+    if (state.activeProjectId && state.activeProjectId !== projectId) {
+      await supabase.from('project_info').update({ status: 'archived' }).eq('id', state.activeProjectId);
+    }
+    await supabase.from('project_info').update({ status: 'active' }).eq('id', projectId);
+    await get().fetchFromDB();
+  },
+
+  deleteProject: async (projectId) => {
+    const { data: projectDays } = await supabase.from('days').select('id').eq('project_id', projectId);
+    const dayIds = (projectDays || []).map(d => d.id);
+    if (dayIds.length > 0) {
+      await supabase.from('tasks').delete().in('day_id', dayIds);
+      await supabase.from('days').delete().in('id', dayIds);
+    }
+    await supabase.from('project_info').delete().eq('id', projectId);
   },
 
   removeDay: async (dayId) => {

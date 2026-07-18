@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useProjectStore } from '../store/projectStore';
-import { Plus, Trash2, CheckCircle2, PlayCircle, MapPin, Wrench, Target, MessageSquare } from 'lucide-react';
+import { Plus, Trash2, CheckCircle2, PlayCircle, MapPin, Wrench, Target, MessageSquare, Calendar, Building2 } from 'lucide-react';
 
 // Vercel 모노크롬 토큰 (60-30-10 법칙)
 const vc = {
@@ -20,7 +20,7 @@ const vc = {
 };
 
 export default function DayModule({ activeDayId }) {
-  const { data, mode, workerName, addTask, updateTask, removeTask } = useProjectStore();
+  const { data, mode, workerName, addTask, updateTask, removeTask, updateDay } = useProjectStore();
   const day = data.days.find((d) => d.id === activeDayId);
   const [memoInput, setMemoInput] = useState({});
 
@@ -68,6 +68,38 @@ export default function DayModule({ activeDayId }) {
 
   return (
     <div className="p-4 pb-28" style={{ backgroundColor: '#f8fafc' }}>
+      {mode === 'admin' && (
+        <div className="flex space-x-2 mb-4">
+          <div
+            className="flex-1 flex items-center px-3 py-2 rounded-xl min-h-[44px]"
+            style={{ backgroundColor: vc.bg, border: `1px solid ${vc.border}` }}
+          >
+            <Calendar size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
+            <input
+              type="date"
+              value={day.date || ''}
+              onChange={(e) => updateDay(day.id, { date: e.target.value })}
+              className="w-full bg-transparent text-[14px] font-medium focus:outline-none"
+              style={{ color: vc.textMain }}
+            />
+          </div>
+          <div
+            className="flex-1 flex items-center px-3 py-2 rounded-xl min-h-[44px]"
+            style={{ backgroundColor: vc.bg, border: `1px solid ${vc.border}` }}
+          >
+            <Building2 size={16} className="mr-2 flex-shrink-0" style={{ color: vc.textDim }} />
+            <input
+              type="text"
+              value={day.site || ''}
+              onChange={(e) => updateDay(day.id, { site: e.target.value })}
+              placeholder="예: 담곡학사"
+              className="w-full bg-transparent text-[14px] font-medium focus:outline-none"
+              style={{ color: vc.textMain }}
+            />
+          </div>
+        </div>
+      )}
+
       {day.tasks.length === 0 ? (
         <div
           className="text-center py-12 rounded-2xl"
@@ -295,8 +327,9 @@ export default function DayModule({ activeDayId }) {
                 </div>
                 <div className="flex p-1 rounded-xl" style={{ backgroundColor: vc.surface }}>
                   <button
-                    onClick={() => handleStatusChange(task.id, 'in-progress')}
-                    className="flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium"
+                    onClick={() => mode === 'admin' && handleStatusChange(task.id, 'in-progress')}
+                    disabled={mode !== 'admin'}
+                    className="flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium disabled:cursor-not-allowed"
                     style={
                       task.status === 'in-progress'
                         ? { backgroundColor: vc.bg, color: vc.blue, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', border: `1px solid ${vc.border}` }
@@ -307,8 +340,9 @@ export default function DayModule({ activeDayId }) {
                     진행중
                   </button>
                   <button
-                    onClick={() => handleStatusChange(task.id, 'completed')}
-                    className="flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium"
+                    onClick={() => mode === 'admin' && handleStatusChange(task.id, 'completed')}
+                    disabled={mode !== 'admin'}
+                    className="flex-1 flex items-center justify-center min-h-[44px] rounded-lg transition-all text-[15px] font-medium disabled:cursor-not-allowed"
                     style={
                       task.status === 'completed'
                         ? { backgroundColor: vc.bg, color: vc.green, boxShadow: '0 1px 4px rgba(0,0,0,0.08)', border: `1px solid ${vc.border}` }

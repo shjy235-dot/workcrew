@@ -1,5 +1,5 @@
-import React from 'react';
-import { Calendar, AlertTriangle, FileText, Target } from 'lucide-react';
+import React, { useState } from 'react';
+import { Calendar, AlertTriangle, FileText, Target, FolderOpen, Trash2 } from 'lucide-react';
 import { useProjectStore } from '../store/projectStore';
 
 // Vercel 모노크롬 토큰 (60-30-10 법칙)
@@ -19,7 +19,38 @@ const vc = {
 };
 
 export default function Dashboard() {
-  const { data, updateProjectInfo, mode } = useProjectStore();
+  const { data, updateProjectInfo, mode, activeProjectId, listProjects, startNewProject, loadProject, deleteProject } = useProjectStore();
+  const [showProjectList, setShowProjectList] = useState(false);
+  const [projects, setProjects] = useState([]);
+
+  const handleToggleProjectList = async () => {
+    if (!showProjectList) {
+      const list = await listProjects();
+      setProjects(list);
+    }
+    setShowProjectList((v) => !v);
+  };
+
+  const handleStartNewProject = async () => {
+    const name = window.prompt('새 프로젝트명을 입력하세요:');
+    if (!name) return;
+    if (!window.confirm(`"${name}" 프로젝트를 새로 시작합니다. 현재 프로젝트는 보관됩니다. 계속할까요?`)) return;
+    await startNewProject(name);
+    setShowProjectList(false);
+  };
+
+  const handleLoadProject = async (projectId, projectName) => {
+    if (!window.confirm(`"${projectName || '이름 없음'}" 프로젝트를 불러옵니다. 계속할까요?`)) return;
+    await loadProject(projectId);
+    setShowProjectList(false);
+  };
+
+  const handleDeleteProject = async (projectId, projectName) => {
+    if (!window.confirm(`"${projectName || '이름 없음'}" 프로젝트를 완전히 삭제합니다. 내부의 모든 일정과 작업 내역이 영구히 사라지며 되돌릴 수 없습니다. 계속할까요?`)) return;
+    await deleteProject(projectId);
+    const list = await listProjects();
+    setProjects(list);
+  };
 
   const calculateProgress = () => {
     let totalTasks = 0;
@@ -191,6 +222,77 @@ export default function Dashboard() {
             </div>
           )}
         </div>
+
+        {/* 프로젝트 관리 카드 (관리자 전용) */}
+        {mode === 'admin' && (
+          <div className="p-6" style={cardStyle}>
+            <div className="flex items-center mb-4" style={{ color: vc.textSec }}>
+              <FolderOpen size={18} className="mr-2" />
+              <h2 className="font-semibold text-[16px]">프로젝트 관리</h2>
+            </div>
+            <div className="flex space-x-2">
+              <button
+                onClick={handleStartNewProject}
+                className="flex-1 py-3 rounded-xl text-[13px] font-medium min-h-[44px] transition-all btn-mac"
+                style={{ backgroundColor: vc.accent, color: '#ffffff', border: `1px solid ${vc.accent}` }}
+              >
+                새 프로젝트 시작
+              </button>
+              <button
+                onClick={handleToggleProjectList}
+                className="flex-1 py-3 rounded-xl text-[13px] font-medium min-h-[44px] transition-all btn-mac"
+                style={{ backgroundColor: vc.bg, color: vc.textMain, border: `1px solid ${vc.border}` }}
+              >
+                이전 프로젝트 불러오기
+              </button>
+            </div>
+
+            {showProjectList && (
+              <div className="mt-4 space-y-2">
+                {projects.length === 0 ? (
+                  <p className="text-[13px]" style={{ color: vc.textDim }}>불러올 프로젝트가 없습니다.</p>
+                ) : (
+                  projects.map((p) => (
+                    <div
+                      key={p.id}
+                      className="flex items-center justify-between p-3 rounded-xl"
+                      style={{ backgroundColor: vc.surface, border: `1px solid ${vc.border}` }}
+                    >
+                      <div>
+                        <p className="font-medium text-[14px]" style={{ color: vc.textMain }}>
+                          {p.project_name || '이름 없음'}
+                        </p>
+                        <p className="text-[11px]" style={{ color: vc.textDim }}>
+                          {p.id === activeProjectId ? '현재 진행 중' : '보관됨'} · {p.start_date || '?'} ~ {p.end_date || '?'}
+                        </p>
+                      </div>
+                      {p.id !== activeProjectId && (
+                        <div className="flex items-center space-x-1.5">
+                          <button
+                            onClick={() => handleLoadProject(p.id, p.project_name)}
+                            className="px-3 py-2 rounded-lg text-[12px] font-medium min-h-[44px]"
+                            style={{ backgroundColor: vc.accent, color: '#ffffff' }}
+                          >
+                            불러오기
+                          </button>
+                          <button
+                            onClick={() => handleDeleteProject(p.id, p.project_name)}
+                            className="p-2 min-h-[44px] min-w-[44px] flex items-center justify-center rounded-lg transition-colors"
+                            style={{ color: vc.textDim }}
+                            onMouseEnter={e => (e.currentTarget.style.color = vc.red)}
+                            onMouseLeave={e => (e.currentTarget.style.color = vc.textDim)}
+                          >
+                            <Trash2 size={16} />
+                          </button>
+                        </div>
+                      )}
+                    </div>
+                  ))
+                )}
+              </div>
+            )}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -43,13 +43,12 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
     }
   };
 
-  const getDayLabel = (day, index) => {
-    if (!data.startDate) return day.title;
-    const date = new Date(data.startDate);
-    date.setDate(date.getDate() + index);
+  const getDayLabel = (day) => {
+    if (!day.date) return day.title || '날짜 미정';
+    const date = new Date(day.date);
     const mm = String(date.getMonth() + 1).padStart(2, '0');
     const dd = String(date.getDate()).padStart(2, '0');
-    return `${index + 1}일차 (${mm}/${dd})`;
+    return `${mm}/${dd}`;
   };
 
   return (
@@ -74,7 +73,7 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
         </button>
 
         <div ref={scrollRef} className="flex-1 flex overflow-x-auto hide-scrollbar space-x-2 snap-x px-1">
-          {data.days.map((day, index) => {
+          {data.days.map((day) => {
             const isActive = activeDayId === day.id;
             return (
               <div
@@ -95,9 +94,19 @@ export default function DayNavigation({ activeDayId, setActiveDayId }) {
                       }
                 }
               >
-                <span className="font-semibold whitespace-nowrap text-[15px]">
-                  {getDayLabel(day, index)}
-                </span>
+                <div className="flex flex-col items-start leading-tight">
+                  {day.site && (
+                    <span
+                      className="text-[10px] font-medium whitespace-nowrap"
+                      style={{ color: isActive ? 'rgba(255,255,255,0.75)' : vc.textDim }}
+                    >
+                      {day.site}
+                    </span>
+                  )}
+                  <span className="font-semibold whitespace-nowrap text-[15px]">
+                    {getDayLabel(day)}
+                  </span>
+                </div>
                 {mode === 'admin' && (
                   <button
                     onClick={(e) => handleRemoveDay(day.id, e)}
